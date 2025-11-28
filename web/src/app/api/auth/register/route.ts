@@ -4,8 +4,10 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
+  console.log('🔵 Register route called');
   try {
     const body = await request.json();
+    console.log('🔵 Register body received:', { email: body.email, username: body.username });
     const { email, username, password, firstName, lastName } = body;
 
     // Validation
