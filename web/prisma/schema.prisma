@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  bio       String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  posts         Post[]
+  bookReviews   BookReview[]
+  comments      Comment[]
+  likes         Like[]
+  
+  // Système d'amis
+  friendsInitiated Friendship[] @relation("FriendshipInitiator")
+  friendsReceived  Friendship[] @relation("FriendshipReceiver")
+
+  @@map("users")
+}
+
+model Friendship {
+  id         String   @id @default(uuid())
+  status     FriendshipStatus @default(PENDING)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  initiatorId String
+  receiverId  String
+  
+  initiator User @relation("FriendshipInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  receiver  User @relation("FriendshipReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([initiatorId, receiverId])
+  @@map("friendships")
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  content   String
+  type      PostType @default(PUBLIC)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  comments Comment[]
+  likes    Like[]
+
+  @@map("posts")
+}
+
+enum PostType {
+  PUBLIC    // Mur public (style Twitter)
+  FRIENDS   // Visible uniquement par les amis
+}
+
+model BookReview {
+  id          String   @id @default(uuid())
+  bookTitle   String
+  bookAuthor  String
+  bookIsbn    String?
+  bookCover   String?
+  rating      Int      // Note de 1 à 10
+  review      String?  // Avis textuel
+  status      ReadingStatus @default(READ)
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  comments Comment[]
+  likes    Like[]
+
+  @@map("book_reviews")
+}
+
+enum ReadingStatus {
+  WANT_TO_READ  // Envie de lire
+  READING       // En cours de lecture
+  READ          // Lu
+  ABANDONED     // Abandonné
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  postId       String?
+  post         Post?       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  bookReviewId String?
+  bookReview   BookReview? @relation(fields: [bookReviewId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId       String?
+  post         Post?       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  bookReviewId String?
+  bookReview   BookReview? @relation(fields: [bookReviewId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@unique([userId, bookReviewId])
+  @@map("likes")
+}
+

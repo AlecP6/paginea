@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+// Utilise les API Routes Next.js (toujours /api en production, ou backend Express en dev local)
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_URL,

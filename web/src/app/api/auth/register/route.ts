@@ -1,0 +1,90 @@
+import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { prisma } from '@/lib/prisma';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { email, username, password, firstName, lastName } = body;
+
+    // Validation
+    if (!email || !email.includes('@')) {
+      return NextResponse.json(
+        { error: 'Email invalide' },
+        { status: 400 }
+      );
+    }
+
+    if (!username || username.length < 3) {
+      return NextResponse.json(
+        { error: 'Le nom d\'utilisateur doit contenir au moins 3 caractères' },
+        { status: 400 }
+      );
+    }
+
+    if (!password || password.length < 6) {
+      return NextResponse.json(
+        { error: 'Le mot de passe doit contenir au moins 6 caractères' },
+        { status: 400 }
+      );
+    }
+
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { username }],
+      },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'Email ou nom d\'utilisateur déjà utilisé' },
+        { status: 400 }
+      );
+    }
+
+    // Hasher le mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Créer l'utilisateur
+    const user = await prisma.user.create({
+      data: {
+        email,
+        username,
+        password: hashedPassword,
+        firstName,
+        lastName,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        firstName: true,
+        lastName: true,
+        bio: true,
+        avatar: true,
+        createdAt: true,
+      },
+    });
+
+    // Générer le token JWT
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET not configured');
+    }
+
+    const token = jwt.sign({ userId: user.id }, jwtSecret, {
+      expiresIn: '30d',
+    });
+
+    return NextResponse.json({ user, token }, { status: 201 });
+  } catch (error) {
+    console.error('Register error:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de l\'inscription' },
+      { status: 500 }
+    );
+  }
+}
+
