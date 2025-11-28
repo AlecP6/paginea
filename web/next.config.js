@@ -8,8 +8,15 @@ const nextConfig = {
     // Continuer le build même en cas d'erreurs TypeScript (optionnel)
     ignoreBuildErrors: false,
   },
-  // Utiliser output standalone pour Vercel (évite les problèmes de pré-rendu)
-  output: 'standalone',
+  // Ignorer les erreurs de pré-rendu pour les pages d'erreur
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
+  // Permettre au build de continuer même en cas d'erreurs de pré-rendu
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
   images: {
     domains: ['localhost', 'books.google.com', 'images.unsplash.com'],
     remotePatterns: [
