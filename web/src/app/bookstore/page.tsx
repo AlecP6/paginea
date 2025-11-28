@@ -232,6 +232,15 @@ export default function BookstorePage() {
             ))}
           </div>
         )}
+
+        {/* AdSense - En bas de la page */}
+        <div className="mt-8 mb-6 flex justify-center">
+          <AdSense
+            format="auto"
+            responsive={true}
+            style={{ display: 'block', minHeight: '100px' }}
+          />
+        </div>
       </main>
 
       {/* Footer */}
