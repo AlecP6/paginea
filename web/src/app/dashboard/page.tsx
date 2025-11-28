@@ -193,22 +193,22 @@ export default function DashboardPage() {
                       <span className="font-semibold dark:text-white">
                         {post.author.username}
                       </span>
-                      <span className="text-gray-400 text-sm">·</span>
-                      <span className="text-gray-500 text-sm">
+                      <span className="text-white text-sm">·</span>
+                      <span className="text-white text-sm">
                         {new Date(post.createdAt).toLocaleDateString('fr-FR')}
                       </span>
                     </div>
                     {user && post.author.id === user.id && (
                       <button
                         onClick={() => handleDeletePost(post.id)}
-                        className="text-gray-400 hover:text-red-500 transition-colors"
+                        className="text-white hover:text-red-500 transition-colors"
                         title="Supprimer ce post"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     )}
                   </div>
-                  <p className="mt-2 text-gray-800 dark:text-gray-200">
+                  <p className="mt-2 text-white dark:text-white">
                     {post.content}
                   </p>
 
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                       className={`flex items-center space-x-2 transition-colors ${
                         post.isLiked
                           ? 'text-red-500'
-                          : 'text-gray-500 hover:text-red-500'
+                          : 'text-white hover:text-red-500'
                       }`}
                     >
                       <Heart
@@ -233,7 +233,7 @@ export default function DashboardPage() {
                       className={`flex items-center space-x-2 transition-colors ${
                         expandedPostId === post.id
                           ? 'text-primary-600'
-                          : 'text-gray-500 hover:text-primary-600'
+                          : 'text-white hover:text-primary-600'
                       }`}
                     >
                       <MessageSquare className="w-5 h-5" />
@@ -266,20 +266,20 @@ export default function DashboardPage() {
                                     <span className="font-semibold text-sm dark:text-white">
                                       {comment.author.username}
                                     </span>
-                                    <span className="text-gray-400 text-xs">
+                                    <span className="text-white text-xs">
                                       {new Date(comment.createdAt).toLocaleDateString('fr-FR')}
                                     </span>
                                   </div>
                                   {user && comment.author.id === user.id && (
                                     <button
                                       onClick={() => handleDeleteComment(comment.id, post.id)}
-                                      className="text-gray-400 hover:text-red-500 transition-colors"
+                                      className="text-white hover:text-red-500 transition-colors"
                                     >
                                       <X className="w-3 h-3" />
                                     </button>
                                   )}
                                 </div>
-                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                <p className="text-sm text-white dark:text-white">
                                   {comment.content}
                                 </p>
                               </div>
@@ -319,7 +319,7 @@ export default function DashboardPage() {
           ))}
 
           {posts.length === 0 && (
-            <div className="card text-center text-gray-500">
+            <div className="card text-center text-white">
               <p>Aucun post pour le moment. Soyez le premier à publier !</p>
             </div>
           )}
@@ -329,19 +329,19 @@ export default function DashboardPage() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-center md:text-left text-gray-600 dark:text-gray-400">
+          <div className="text-center md:text-left text-white dark:text-white">
             <p>&copy; 2025 Paginea. Tous droits réservés.</p>
           </div>
           <div className="flex space-x-6">
             <button
               onClick={() => router.push('/about')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               À propos
             </button>
             <button
               onClick={() => router.push('/legal')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Mentions légales
             </button>

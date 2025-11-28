@@ -113,18 +113,18 @@ export default function BookstorePage() {
             <BookOpen className="w-10 h-10 text-primary-600" />
             Librairie - Dernières Publications
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-3">
+          <p className="text-white dark:text-white mb-3">
             Découvrez les 20 derniers livres ajoutés par la communauté Paginea
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 italic">
+          <p className="text-xs text-white dark:text-white italic">
             ℹ️ En tant que Partenaire Amazon, Paginea réalise un bénéfice sur les achats remplissant les conditions requises.
           </p>
         </div>
 
         {/* Books Grid */}
         {books.length === 0 ? (
-          <div className="card text-center text-gray-500">
-            <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <div className="card text-center text-white">
+            <BookOpen className="w-16 h-16 text-white mx-auto mb-4" />
             <p>Aucune publication pour le moment. Soyez les premiers à ajouter des livres !</p>
           </div>
         ) : (
@@ -151,7 +151,7 @@ export default function BookstorePage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <BookOpen className="w-16 h-16 text-gray-400" />
+                      <BookOpen className="w-16 h-16 text-white" />
                     </div>
                   )}
                 </div>
@@ -162,7 +162,7 @@ export default function BookstorePage() {
                     {book.title}
                   </h3>
                   
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-1">
+                  <p className="text-sm text-white dark:text-white mb-2 line-clamp-1">
                     {book.author}
                   </p>
 
@@ -179,12 +179,12 @@ export default function BookstorePage() {
                                 ? 'text-yellow-400 fill-yellow-400'
                                 : i < book.starRating
                                 ? 'text-yellow-400 fill-yellow-400'
-                                : 'text-gray-300'
+                                : 'text-white'
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <span className="text-sm font-semibold text-white dark:text-white">
                         {book.starRating.toFixed(1)}
                       </span>
                     </div>
@@ -202,13 +202,13 @@ export default function BookstorePage() {
                           {book.publishedBy[0].toUpperCase()}
                         </div>
                       )}
-                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                      <span className="text-xs text-white dark:text-white">
                         par {book.publishedBy}
                       </span>
                     </div>
 
                     {/* Date */}
-                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                    <p className="text-xs text-white dark:text-white">
                       {new Date(book.publishedAt).toLocaleDateString('fr-FR', {
                         day: 'numeric',
                         month: 'short',
@@ -246,19 +246,19 @@ export default function BookstorePage() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-center md:text-left text-gray-600 dark:text-gray-400">
+          <div className="text-center md:text-left text-white dark:text-white">
             <p>&copy; 2025 Paginea. Tous droits réservés.</p>
           </div>
           <div className="flex space-x-6">
             <button
               onClick={() => router.push('/about')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               À propos
             </button>
             <button
               onClick={() => router.push('/legal')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Mentions légales
             </button>

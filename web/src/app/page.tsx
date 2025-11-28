@@ -72,7 +72,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
               <button
                 onClick={() => router.push('/register')}
-                className="group bg-white/95 hover:bg-white text-gray-900 font-semibold text-lg px-10 py-4 rounded-xl shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-green-500/50"
+                className="group bg-white/95 hover:bg-white text-white font-semibold text-lg px-10 py-4 rounded-xl shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-green-500/50"
               >
                 <span className="flex items-center justify-center space-x-2">
                   <span>Rejoindre la communauté</span>

@@ -29,17 +29,17 @@ export default function AboutPage() {
               />
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-[family-name:var(--font-dancing-script)]" style={{ fontWeight: 700 }}>
+          <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-white mb-4 font-[family-name:var(--font-dancing-script)]" style={{ fontWeight: 700 }}>
             Bienvenue sur Paginea
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 font-[family-name:var(--font-dancing-script)]" style={{ fontWeight: 600 }}>
+          <p className="text-xl text-white dark:text-white font-[family-name:var(--font-dancing-script)]" style={{ fontWeight: 600 }}>
             Le réseau social qui connecte les passionnés de lecture
           </p>
         </div>
 
         {/* Fonctionnalités */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+          <h2 className="text-2xl font-bold text-white dark:text-white mb-6 text-center">
             Nos Fonctionnalités
           </h2>
           
@@ -50,10 +50,10 @@ export default function AboutPage() {
                   <Star className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-white dark:text-white mb-2">
                     Notez vos lectures
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-white dark:text-white">
                     Attribuez une note de 1 à 10 et partagez vos avis détaillés sur les livres que vous avez lus.
                   </p>
                 </div>
@@ -66,10 +66,10 @@ export default function AboutPage() {
                   <Users className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-white dark:text-white mb-2">
                     Connectez-vous
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-white dark:text-white">
                     Ajoutez des amis et suivez leurs lectures pour découvrir de nouvelles recommandations.
                   </p>
                 </div>
@@ -82,10 +82,10 @@ export default function AboutPage() {
                   <MessageSquare className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-white dark:text-white mb-2">
                     Mur Post-it
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-white dark:text-white">
                     Partagez vos pensées et découvertes littéraires sur le mur public de la communauté.
                   </p>
                 </div>
@@ -98,10 +98,10 @@ export default function AboutPage() {
                   <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-white dark:text-white mb-2">
                     Découvrez le Top
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-white dark:text-white">
                     Consultez les livres les mieux notés par la communauté et trouvez votre prochaine lecture.
                   </p>
                 </div>
@@ -112,14 +112,14 @@ export default function AboutPage() {
 
         {/* Pourquoi Paginea */}
         <div className="card mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
             Pourquoi choisir Paginea ?
           </h2>
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <Heart className="w-5 h-5 text-red-500 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-white dark:text-white">
                   <strong>Passion commune :</strong> Rejoignez une communauté qui partage votre amour de la lecture
                 </p>
               </div>
@@ -127,7 +127,7 @@ export default function AboutPage() {
             <div className="flex items-start space-x-3">
               <Star className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-white dark:text-white">
                   <strong>Découvertes :</strong> Trouvez votre prochaine lecture grâce aux avis de lecteurs passionnés
                 </p>
               </div>
@@ -135,7 +135,7 @@ export default function AboutPage() {
             <div className="flex items-start space-x-3">
               <Users className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-white dark:text-white">
                   <strong>Échanges enrichissants :</strong> Partagez vos impressions et débattez avec d'autres lecteurs
                 </p>
               </div>
@@ -143,7 +143,7 @@ export default function AboutPage() {
             <div className="flex items-start space-x-3">
               <BookOpen className="w-5 h-5 text-primary-500 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-white dark:text-white">
                   <strong>Suivi personnalisé :</strong> Gardez une trace de toutes vos lectures et notes
                 </p>
               </div>
@@ -155,19 +155,19 @@ export default function AboutPage() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-center md:text-left text-gray-600 dark:text-gray-400">
+          <div className="text-center md:text-left text-white dark:text-white">
             <p>&copy; 2025 Paginea. Tous droits réservés.</p>
           </div>
           <div className="flex space-x-6">
             <button
               onClick={() => router.push('/about')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               À propos
             </button>
             <button
               onClick={() => router.push('/legal')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Mentions légales
             </button>

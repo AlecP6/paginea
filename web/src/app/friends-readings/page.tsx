@@ -75,7 +75,7 @@ export default function FriendsReadingsPage() {
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold dark:text-white mb-2">📚 Lectures de mes Amis</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-white dark:text-white">
             Découvrez ce que vos amis lisent et leurs avis sur leurs livres
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function FriendsReadingsPage() {
                     <p className="font-semibold dark:text-white">
                       {review.author.username}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-white">
                       {new Date(review.createdAt).toLocaleDateString('fr-FR')}
                     </p>
                   </div>
@@ -124,7 +124,7 @@ export default function FriendsReadingsPage() {
                 <h3 className="text-xl font-bold dark:text-white mb-1">
                   {review.bookTitle}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-3">
+                <p className="text-white dark:text-white mb-3">
                   par {review.bookAuthor}
                 </p>
 
@@ -137,7 +137,7 @@ export default function FriendsReadingsPage() {
                         className={`w-4 h-4 ${
                           i < review.rating
                             ? 'text-yellow-500 fill-yellow-500'
-                            : 'text-gray-300'
+                            : 'text-white'
                         }`}
                       />
                     ))}
@@ -154,7 +154,7 @@ export default function FriendsReadingsPage() {
                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                       : review.status === 'WANT_TO_READ'
                       ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                      : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                      : 'bg-gray-100 text-white dark:bg-gray-700 dark:text-white'
                   }`}>
                     {review.status === 'READ' && 'Lu'}
                     {review.status === 'READING' && 'En cours'}
@@ -165,7 +165,7 @@ export default function FriendsReadingsPage() {
 
                 {/* Avis */}
                 {review.review && (
-                  <p className="text-gray-800 dark:text-gray-200 mb-4 line-clamp-3">
+                  <p className="text-white dark:text-white mb-4 line-clamp-3">
                     {review.review}
                   </p>
                 )}
@@ -177,7 +177,7 @@ export default function FriendsReadingsPage() {
                     className={`flex items-center space-x-2 ${
                       review.isLiked
                         ? 'text-red-500'
-                        : 'text-gray-500 hover:text-red-500'
+                        : 'text-white hover:text-red-500'
                     }`}
                   >
                     <Heart
@@ -187,7 +187,7 @@ export default function FriendsReadingsPage() {
                     <span>{review._count.likes}</span>
                   </button>
 
-                  <button className="flex items-center space-x-2 text-gray-500 hover:text-primary-600">
+                  <button className="flex items-center space-x-2 text-white hover:text-primary-600">
                     <MessageSquare className="w-5 h-5" />
                     <span>{review._count.comments}</span>
                   </button>
@@ -199,13 +199,13 @@ export default function FriendsReadingsPage() {
           <div className="card text-center py-12">
             <div className="flex justify-center mb-4">
               <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                <UserIcon className="w-10 h-10 text-gray-400" />
+                <UserIcon className="w-10 h-10 text-white" />
               </div>
             </div>
             <h3 className="text-xl font-semibold dark:text-white mb-2">
               Aucune lecture d'amis pour le moment
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-white mb-6">
               Ajoutez des amis et découvrez leurs lectures !
             </p>
             <button

@@ -43,10 +43,10 @@ export default function RegisterPage() {
               className="w-20 h-20 object-contain"
             />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-white dark:text-white mb-2">
             Rejoignez Paginea
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-white dark:text-white">
             Créez votre compte et commencez à partager
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function RegisterPage() {
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white dark:text-white mb-2">
                 Email *
               </label>
               <input
@@ -68,7 +68,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white dark:text-white mb-2">
                 Nom d'utilisateur *
               </label>
               <input
@@ -83,7 +83,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white dark:text-white mb-2">
                 Mot de passe *
               </label>
               <input
@@ -99,7 +99,7 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white dark:text-white mb-2">
                   Prénom
                 </label>
                 <input
@@ -112,7 +112,7 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white dark:text-white mb-2">
                   Nom
                 </label>
                 <input
@@ -135,7 +135,7 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-white dark:text-white">
               Déjà un compte ?{' '}
               <button
                 onClick={() => router.push('/login')}
@@ -151,19 +151,19 @@ export default function RegisterPage() {
         <footer className="py-6 mt-8">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="text-center md:text-left text-gray-600 dark:text-gray-400 text-sm">
+              <div className="text-center md:text-left text-white dark:text-white text-sm">
                 <p>&copy; 2025 Paginea. Tous droits réservés.</p>
               </div>
               <div className="flex space-x-6 text-sm">
                 <button
                   onClick={() => router.push('/about')}
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   À propos
                 </button>
                 <button
                   onClick={() => router.push('/legal')}
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   Mentions légales
                 </button>

@@ -19,10 +19,10 @@ export default function LegalPage() {
               <Scale className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-white dark:text-white mb-4">
             Mentions Légales
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-white dark:text-white">
             Dernière mise à jour : 27 novembre 2025
           </p>
         </div>
@@ -32,12 +32,12 @@ export default function LegalPage() {
           <div className="flex items-start space-x-3 mb-4">
             <Mail className="w-6 h-6 text-primary-600 flex-shrink-0 mt-1" />
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
                 1. Éditeur du site
               </h2>
             </div>
           </div>
-          <div className="space-y-2 text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 text-white dark:text-white">
             <p><strong>Nom du site :</strong> Paginea</p>
             <p><strong>Propriétaire :</strong> Santa</p>
             <p><strong>Adresse :</strong> France</p>
@@ -47,10 +47,10 @@ export default function LegalPage() {
 
         {/* Propriété intellectuelle */}
         <div className="card mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
             2. Propriété intellectuelle
           </h2>
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
+          <div className="space-y-3 text-white dark:text-white">
             <p>
               L'ensemble du contenu du site Paginea (textes, images, vidéos, logos, icônes, etc.) 
               est protégé par le droit d'auteur, le droit des marques et/ou tout autre droit de 
@@ -69,12 +69,12 @@ export default function LegalPage() {
           <div className="flex items-start space-x-3 mb-4">
             <Eye className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
                 3. Protection des données personnelles
               </h2>
             </div>
           </div>
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
+          <div className="space-y-3 text-white dark:text-white">
             <p>
               Conformément au Règlement Général sur la Protection des Données (RGPD) et à la 
               loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, 
@@ -105,12 +105,12 @@ export default function LegalPage() {
           <div className="flex items-start space-x-3 mb-4">
             <Cookie className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
                 4. Cookies
               </h2>
             </div>
           </div>
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
+          <div className="space-y-3 text-white dark:text-white">
             <p>
               Le site Paginea utilise des cookies pour améliorer votre expérience utilisateur 
               et assurer le bon fonctionnement du service.
@@ -131,10 +131,10 @@ export default function LegalPage() {
 
         {/* Responsabilité */}
         <div className="card mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
             5. Limitation de responsabilité
           </h2>
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
+          <div className="space-y-3 text-white dark:text-white">
             <p>
               Paginea s'efforce de fournir un service de qualité, mais ne peut garantir 
               l'absence totale d'erreurs ou d'interruptions.
@@ -153,10 +153,10 @@ export default function LegalPage() {
 
         {/* Droit applicable */}
         <div className="card mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
             6. Droit applicable et juridiction
           </h2>
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
+          <div className="space-y-3 text-white dark:text-white">
             <p>
               Les présentes mentions légales sont régies par le droit français.
             </p>
@@ -168,14 +168,14 @@ export default function LegalPage() {
 
         {/* Contact */}
         <div className="card bg-primary-50 dark:bg-primary-900 border-primary-200 dark:border-primary-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-white dark:text-white mb-4">
             📧 Contact
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-white dark:text-white mb-4">
             Pour toute question concernant ces mentions légales ou vos données personnelles, 
             n'hésitez pas à nous contacter :
           </p>
-          <div className="space-y-2 text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 text-white dark:text-white">
             <p><strong>Email :</strong> contact@paginea.fr</p>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function LegalPage() {
 
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
-        <div className="text-center text-gray-600 dark:text-gray-400">
+        <div className="text-center text-white dark:text-white">
           <p>&copy; 2025 Paginea. Tous droits réservés.</p>
         </div>
       </footer>

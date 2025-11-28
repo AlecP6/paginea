@@ -163,22 +163,22 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-semibold dark:text-white">
                     {user.username}
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
+                  <p className="text-white dark:text-white">{user.email}</p>
                 </div>
               </div>
 
               {user.bio && (
                 <div>
-                  <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  <h3 className="font-semibold text-white dark:text-white mb-2">
                     Bio
                   </h3>
-                  <p className="text-gray-800 dark:text-gray-200">{user.bio}</p>
+                  <p className="text-white dark:text-white">{user.bio}</p>
                 </div>
               )}
 
               {user.createdAt && (
                 <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-white">
                     Membre depuis le {new Date(user.createdAt).toLocaleDateString('fr-FR')}
                   </p>
                 </div>
@@ -187,7 +187,7 @@ export default function ProfilePage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white dark:text-white mb-2">
                   Nom d'utilisateur
                 </label>
                 <input
@@ -203,7 +203,7 @@ export default function ProfilePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white dark:text-white mb-2">
                   Bio
                 </label>
                 <textarea
@@ -227,19 +227,19 @@ export default function ProfilePage() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-center md:text-left text-gray-600 dark:text-gray-400">
+          <div className="text-center md:text-left text-white dark:text-white">
             <p>&copy; 2025 Paginea. Tous droits réservés.</p>
           </div>
           <div className="flex space-x-6">
             <button
               onClick={() => router.push('/about')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               À propos
             </button>
             <button
               onClick={() => router.push('/legal')}
-              className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Mentions légales
             </button>
