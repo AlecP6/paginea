@@ -73,9 +73,9 @@ export const bookReviewApi = {
 
 // Friendships
 export const friendshipApi = {
-  sendRequest: (userId: string) => api.post(`/friendships/request/${userId}`),
+  sendRequest: (userId: string) => api.post(`/friendships/send-request/${userId}`),
   respondToRequest: (friendshipId: string, action: 'accept' | 'reject') =>
-    api.put(`/friendships/request/${friendshipId}`, { action }),
+    api.put(`/friendships/respond-request/${friendshipId}`, { action }),
   getFriends: (userId?: string) => api.get('/friendships/friends', { params: { userId } }),
   getFriendRequests: () => api.get('/friendships/requests'),
   removeFriend: (friendshipId: string) => api.delete(`/friendships/${friendshipId}`),
