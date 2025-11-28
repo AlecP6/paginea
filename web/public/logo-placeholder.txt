@@ -1,0 +1,11 @@
+PLACEZ VOTRE FICHIER logo.png ICI
+
+Instructions :
+1. Sauvegardez l'image du logo envoyée
+2. Renommez-la en "logo.png"
+3. Placez-la dans ce dossier (web/public/)
+4. Supprimez ce fichier texte
+5. Rafraîchissez le navigateur (Cmd+Shift+R)
+
+Le logo apparaîtra automatiquement partout sur le site !
+

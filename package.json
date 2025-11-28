@@ -1,0 +1,31 @@
+{
+  "name": "paginea",
+  "version": "1.0.0",
+  "description": "Réseau social dédié aux amateurs de lecture",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "web",
+    "mobile"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../web && npm install && cd ../mobile && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:web": "cd web && npm run dev",
+    "dev:mobile": "cd mobile && npx expo start",
+    "build:backend": "cd backend && npm run build",
+    "build:web": "cd web && npm run build"
+  },
+  "keywords": [
+    "social-network",
+    "books",
+    "reading",
+    "react",
+    "react-native",
+    "nextjs",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
