@@ -59,7 +59,9 @@ body::before {
   }
   
   .input-field {
-    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-800 text-white transition-all;
+    @apply w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-white transition-all;
+    background-color: #1f2937;
+    border-color: rgba(75, 85, 99, 0.3);
   }
   
   /* Forcer tous les textes en blanc sauf les boutons */
