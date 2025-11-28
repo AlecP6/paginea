@@ -8,9 +8,9 @@ export async function GET(request: NextRequest) {
     if ('error' in authResult) return authResult.error;
     const { userId } = authResult;
 
-    // Headers de cache
+    // Headers de cache réduits pour avoir des données plus fraîches
     const headers = {
-      'Cache-Control': 'private, max-age=60, stale-while-revalidate=120',
+      'Cache-Control': 'private, max-age=10, stale-while-revalidate=30',
     };
 
     const { searchParams } = new URL(request.url);
@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
     } else if (userIdParam) {
       whereCondition = { authorId: userIdParam };
     } else {
+      // Afficher : posts publics + posts FRIENDS des amis + posts des amis (même publics)
       whereCondition = {
         OR: [
           { type: 'PUBLIC' },
@@ -54,6 +55,10 @@ export async function GET(request: NextRequest) {
               { type: 'FRIENDS' },
               { authorId: { in: [...friendIds, userId] } },
             ],
+          },
+          // Inclure les posts des amis même s'ils sont publics
+          {
+            authorId: { in: friendIds },
           },
         ],
       };

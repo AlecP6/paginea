@@ -36,9 +36,12 @@ export default function DashboardPage() {
 
   const fetchPosts = async () => {
     try {
-      const response = await postApi.getPosts({ type: 'PUBLIC' });
+      setLoading(true);
+      // Ne pas spécifier de type pour voir tous les posts (publics + amis)
+      const response = await postApi.getPosts();
       setPosts(response.data);
     } catch (error) {
+      console.error('Error fetching posts:', error);
       toast.error('Erreur lors du chargement des posts');
     } finally {
       setLoading(false);
@@ -50,12 +53,21 @@ export default function DashboardPage() {
     if (!newPost.trim()) return;
 
     try {
-      await postApi.createPost({ content: newPost, type: 'PUBLIC' });
+      const response = await postApi.createPost({ content: newPost, type: 'PUBLIC' });
       setNewPost('');
-      fetchPosts();
+      // Ajouter le nouveau post en haut de la liste immédiatement
+      const newPostData = {
+        ...response.data,
+        isLiked: false,
+        _count: { comments: 0, likes: 0 },
+      };
+      setPosts([newPostData, ...posts]);
       toast.success('Post publié !');
-    } catch (error) {
-      toast.error('Erreur lors de la publication');
+      // Rafraîchir pour avoir les données complètes
+      setTimeout(() => fetchPosts(), 500);
+    } catch (error: any) {
+      console.error('Error creating post:', error);
+      toast.error(error.response?.data?.error || 'Erreur lors de la publication');
     }
   };
 
@@ -79,10 +91,14 @@ export default function DashboardPage() {
 
     try {
       await postApi.deletePost(postId);
-      fetchPosts();
+      // Supprimer immédiatement de la liste sans recharger
+      setPosts(posts.filter(p => p.id !== postId));
       toast.success('Post supprimé !');
-    } catch (error) {
-      toast.error('Erreur lors de la suppression');
+    } catch (error: any) {
+      console.error('Error deleting post:', error);
+      toast.error(error.response?.data?.error || 'Erreur lors de la suppression');
+      // En cas d'erreur, rafraîchir la liste
+      fetchPosts();
     }
   };
 
