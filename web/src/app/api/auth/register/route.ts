@@ -79,10 +79,36 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ user, token }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Register error:', error);
+    
+    // Erreurs spécifiques
+    if (error.message?.includes('JWT_SECRET')) {
+      return NextResponse.json(
+        { error: 'Configuration serveur manquante. Veuillez contacter le support.' },
+        { status: 500 }
+      );
+    }
+    
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { error: 'Email ou nom d\'utilisateur déjà utilisé' },
+        { status: 400 }
+      );
+    }
+    
+    if (error.message?.includes('Can\'t reach database')) {
+      return NextResponse.json(
+        { error: 'Erreur de connexion à la base de données' },
+        { status: 500 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: 'Erreur lors de l\'inscription' },
+      { 
+        error: 'Erreur lors de l\'inscription',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }
