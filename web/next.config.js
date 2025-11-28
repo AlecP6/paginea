@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configuration pour Vercel - évite les problèmes de pré-rendu
-  output: 'standalone',
   eslint: {
     // Désactiver ESLint pendant le build pour éviter les erreurs de compatibilité
     ignoreDuringBuilds: true,
