@@ -43,7 +43,12 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 border-b" style={{
+      background: 'linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5A3E2E 100%)',
+      backgroundColor: '#6B4E3D',
+      borderColor: 'rgba(139, 111, 71, 0.3)',
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+    }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-24">
           {/* Menu burger mobile/tablette (visible uniquement sur petits écrans) */}
