@@ -761,6 +761,7 @@ export default function BooksPage() {
                 </div>
               </div>
             </div>
+            </>
           ))}
 
           {filteredReviews.length === 0 && (
