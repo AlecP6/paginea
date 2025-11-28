@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import { bookReviewApi, booksApi } from '@/lib/api';
-import { Star, Heart, MessageSquare, Plus, Trash2, Search, X, Edit2 } from 'lucide-react';
+import { Star, Heart, MessageSquare, Plus, Trash2, Search, X, Edit2, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function BooksPage() {
