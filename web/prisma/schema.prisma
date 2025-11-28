@@ -16,6 +16,7 @@ model User {
   lastName         String?
   bio              String?
   avatar           String?
+  role             UserRole     @default(USER)
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
   bookReviews      BookReview[]
@@ -24,6 +25,7 @@ model User {
   friendsReceived  Friendship[] @relation("FriendshipReceiver")
   likes            Like[]
   posts            Post[]
+  reports          Report[]
 
   @@map("users")
 }
@@ -51,6 +53,7 @@ model Post {
   authorId  String
   comments  Comment[]
   likes     Like[]
+  reports   Report[]
   author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("posts")
@@ -73,6 +76,7 @@ model BookReview {
   author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments   Comment[]
   likes      Like[]
+  reports    Report[]
 
   @@map("book_reviews")
 }
@@ -88,6 +92,7 @@ model Comment {
   author       User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   bookReview   BookReview? @relation(fields: [bookReviewId], references: [id], onDelete: Cascade)
   post         Post?       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reports      Report[]
 
   @@map("comments")
 }
@@ -124,4 +129,35 @@ enum ReadingStatus {
   READING
   READ
   ABANDONED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  REJECTED
+}
+
+model Report {
+  id            String        @id @default(uuid())
+  reason        String
+  description   String?
+  status        ReportStatus  @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  reporterId    String
+  reporter      User          @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  postId        String?
+  post          Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId     String?
+  comment       Comment?      @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  bookReviewId  String?
+  bookReview    BookReview?   @relation(fields: [bookReviewId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
 }

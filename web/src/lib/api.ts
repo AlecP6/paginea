@@ -97,5 +97,21 @@ export const booksApi = {
   getRecentReviews: () => api.get('/books/recent-reviews'),
 };
 
+// Reports
+export const reportApi = {
+  createReport: (data: { reason: string; description?: string; postId?: string; commentId?: string; bookReviewId?: string }) =>
+    api.post('/reports', data),
+  getReports: (status?: string) => api.get('/reports', { params: { status } }),
+  updateReport: (reportId: string, data: { status: string }) => api.put(`/admin/reports/${reportId}`, data),
+  deleteReport: (reportId: string) => api.delete(`/admin/reports/${reportId}`),
+};
+
+// Admin
+export const adminApi = {
+  deletePost: (postId: string) => api.delete(`/admin/posts/${postId}`),
+  deleteComment: (commentId: string) => api.delete(`/admin/comments/${commentId}`),
+  deleteBookReview: (reviewId: string) => api.delete(`/admin/book-reviews/${reviewId}`),
+};
+
 export default api;
 

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { useState, useRef, useEffect } from 'react';
-import { BookOpen, PenLine, Users, BookMarked, LogOut, User, ChevronDown, Store, Menu, X } from 'lucide-react';
+import { BookOpen, PenLine, Users, BookMarked, LogOut, User, ChevronDown, Store, Menu, X, Shield } from 'lucide-react';
 
 export default function Navbar() {
   const router = useRouter();
@@ -123,6 +123,15 @@ export default function Navbar() {
                 <Users className="w-5 h-5" />
                 <span>Amis</span>
               </button>
+              {user?.role === 'ADMIN' && (
+                <button
+                  onClick={() => router.push('/admin')}
+                  className="flex items-center space-x-2 text-white hover:text-yellow-400 transition-colors"
+                >
+                  <Shield className="w-5 h-5" />
+                  <span>Admin</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -226,6 +235,18 @@ export default function Navbar() {
                 <Users className="w-5 h-5" />
                 <span>Amis</span>
               </button>
+              {user?.role === 'ADMIN' && (
+                <button
+                  onClick={() => {
+                    router.push('/admin');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-yellow-700 transition-colors rounded-lg"
+                >
+                  <Shield className="w-5 h-5" />
+                  <span>Admin</span>
+                </button>
+              )}
 
               <div className="border-t border-gray-700 my-2"></div>
 

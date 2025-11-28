@@ -7,8 +7,9 @@ import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import AdSense from '@/components/AdSense';
 import { bookReviewApi, booksApi } from '@/lib/api';
-import { Star, Heart, MessageSquare, Plus, Trash2, Search, X, Edit2, BookOpen } from 'lucide-react';
+import { Star, Heart, MessageSquare, Plus, Trash2, Search, X, Edit2, BookOpen, Flag } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ReportModal from '@/components/ReportModal';
 
 export default function BooksPage() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function BooksPage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>(null);
+  const [reportModal, setReportModal] = useState<{ isOpen: boolean; contentType: 'post' | 'comment' | 'bookReview'; contentId: string } | null>(null);
   const [formData, setFormData] = useState({
     bookTitle: '',
     bookAuthor: '',
@@ -704,6 +706,15 @@ export default function BooksPage() {
                         </button>
                       </div>
                     )}
+                    {user && review.author.id !== user.id && (
+                      <button
+                        onClick={() => setReportModal({ isOpen: true, contentType: 'bookReview', contentId: review.id })}
+                        className="text-white hover:text-yellow-500 transition-colors"
+                        title="Signaler cette critique"
+                      >
+                        <Flag className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
 
                   <h3 className="text-2xl font-bold dark:text-white mb-1">
@@ -801,6 +812,15 @@ export default function BooksPage() {
           </div>
         </div>
       </footer>
+
+      {reportModal && (
+        <ReportModal
+          isOpen={reportModal.isOpen}
+          onClose={() => setReportModal(null)}
+          contentType={reportModal.contentType}
+          contentId={reportModal.contentId}
+        />
+      )}
     </div>
   );
 }

@@ -9,6 +9,7 @@ interface User {
   lastName?: string;
   bio?: string;
   avatar?: string;
+  role?: string;
   createdAt?: string;
 }
 

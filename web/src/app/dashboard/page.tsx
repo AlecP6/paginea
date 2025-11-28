@@ -6,8 +6,9 @@ import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import AdSense from '@/components/AdSense';
 import { postApi, commentApi } from '@/lib/api';
-import { Heart, MessageSquare, Send, Trash2, X } from 'lucide-react';
+import { Heart, MessageSquare, Send, Trash2, X, Flag } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ReportModal from '@/components/ReportModal';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
   const [newComment, setNewComment] = useState<{ [key: string]: string }>({});
+  const [reportModal, setReportModal] = useState<{ isOpen: boolean; contentType: 'post' | 'comment' | 'bookReview'; contentId: string } | null>(null);
 
   useEffect(() => {
     loadUser();
@@ -214,15 +216,26 @@ export default function DashboardPage() {
                         {new Date(post.createdAt).toLocaleDateString('fr-FR')}
                       </span>
                     </div>
-                    {user && post.author.id === user.id && (
-                      <button
-                        onClick={() => handleDeletePost(post.id)}
-                        className="text-white hover:text-red-500 transition-colors"
-                        title="Supprimer ce post"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    )}
+                    <div className="flex items-center space-x-2">
+                      {user && post.author.id !== user.id && (
+                        <button
+                          onClick={() => setReportModal({ isOpen: true, contentType: 'post', contentId: post.id })}
+                          className="text-white hover:text-yellow-500 transition-colors"
+                          title="Signaler ce post"
+                        >
+                          <Flag className="w-4 h-4" />
+                        </button>
+                      )}
+                      {user && post.author.id === user.id && (
+                        <button
+                          onClick={() => handleDeletePost(post.id)}
+                          className="text-white hover:text-red-500 transition-colors"
+                          title="Supprimer ce post"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <p className="mt-2 text-white dark:text-white">
                     {post.content}
@@ -286,14 +299,25 @@ export default function DashboardPage() {
                                       {new Date(comment.createdAt).toLocaleDateString('fr-FR')}
                                     </span>
                                   </div>
-                                  {user && comment.author.id === user.id && (
-                                    <button
-                                      onClick={() => handleDeleteComment(comment.id, post.id)}
-                                      className="text-white hover:text-red-500 transition-colors"
-                                    >
-                                      <X className="w-3 h-3" />
-                                    </button>
-                                  )}
+                                  <div className="flex items-center space-x-2">
+                                    {user && comment.author.id !== user.id && (
+                                      <button
+                                        onClick={() => setReportModal({ isOpen: true, contentType: 'comment', contentId: comment.id })}
+                                        className="text-white hover:text-yellow-500 transition-colors"
+                                        title="Signaler ce commentaire"
+                                      >
+                                        <Flag className="w-3 h-3" />
+                                      </button>
+                                    )}
+                                    {user && comment.author.id === user.id && (
+                                      <button
+                                        onClick={() => handleDeleteComment(comment.id, post.id)}
+                                        className="text-white hover:text-red-500 transition-colors"
+                                      >
+                                        <X className="w-3 h-3" />
+                                      </button>
+                                    )}
+                                  </div>
                                 </div>
                                 <p className="text-sm text-white dark:text-white">
                                   {comment.content}
@@ -341,6 +365,15 @@ export default function DashboardPage() {
           )}
         </div>
       </main>
+
+      {reportModal && (
+        <ReportModal
+          isOpen={reportModal.isOpen}
+          onClose={() => setReportModal(null)}
+          contentType={reportModal.contentType}
+          contentId={reportModal.contentId}
+        />
+      )}
 
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
