@@ -176,11 +176,13 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-sm text-gray-500">
-                  Membre depuis le {new Date(user.createdAt).toLocaleDateString('fr-FR')}
-                </p>
-              </div>
+              {user.createdAt && (
+                <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-500">
+                    Membre depuis le {new Date(user.createdAt).toLocaleDateString('fr-FR')}
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">

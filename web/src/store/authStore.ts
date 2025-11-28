@@ -9,6 +9,7 @@ interface User {
   lastName?: string;
   bio?: string;
   avatar?: string;
+  createdAt?: string;
 }
 
 interface AuthState {
