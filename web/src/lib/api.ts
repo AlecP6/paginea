@@ -93,7 +93,7 @@ export const booksApi = {
   searchBooks: (query: string) => api.get('/books/search', { params: { query } }),
   getBookByIsbn: (isbn: string) => api.get(`/books/isbn/${isbn}`),
   getNewReleases: () => api.get('/books/new-releases'),
-  getCommunityFavorites: () => api.get('/books/community-favorites'),
+  getRecentReviews: () => api.get('/books/recent-reviews'),
 };
 
 export default api;

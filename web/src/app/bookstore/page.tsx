@@ -76,7 +76,7 @@ export default function BookstorePage() {
   const fetchCommunityFavorites = async () => {
     try {
       console.log('Fetching recent books...');
-      const response = await booksApi.getCommunityFavorites();
+      const response = await booksApi.getRecentReviews();
       console.log('Response:', response.data);
       setBooks(response.data);
     } catch (error) {
