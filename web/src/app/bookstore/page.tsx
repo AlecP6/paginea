@@ -109,7 +109,7 @@ export default function BookstorePage() {
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+          <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
             <BookOpen className="w-10 h-10 text-primary-600" />
             Librairie - Dernières Publications
           </h1>
@@ -158,7 +158,7 @@ export default function BookstorePage() {
 
                 {/* Book Info */}
                 <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2 min-h-[3rem]">
+                  <h3 className="font-semibold text-white mb-1 line-clamp-2 min-h-[3rem]">
                     {book.title}
                   </h3>
                   

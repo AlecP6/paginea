@@ -417,7 +417,7 @@ export default function BooksPage() {
                           />
                         )}
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-gray-900 dark:text-white truncate">
+                          <h4 className="font-semibold text-white truncate">
                             {book.title}
                           </h4>
                           <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
@@ -451,7 +451,7 @@ export default function BooksPage() {
                         <p className="text-sm font-medium text-green-900 dark:text-green-100">
                           ✅ Livre sélectionné
                         </p>
-                        <h4 className="font-semibold text-gray-900 dark:text-white mt-1">
+                        <h4 className="font-semibold text-white mt-1">
                           {selectedBook.title}
                         </h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -732,7 +732,7 @@ export default function BooksPage() {
               </div>
 
               {review.review && (
-                <p className="text-gray-800 dark:text-gray-200 mb-4">
+                <p className="text-white mb-4">
                   {review.review}
                 </p>
               )}
