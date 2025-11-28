@@ -34,5 +34,8 @@
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "prisma": "^5.7.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
