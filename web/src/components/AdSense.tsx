@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: any[] | { loaded?: boolean; push: (config: any) => void };
   }
 }
 
@@ -25,10 +25,12 @@ export default function AdSense({
 }: AdSenseProps) {
   useEffect(() => {
     try {
-      if (window.adsbygoogle && window.adsbygoogle.loaded) {
-        return;
+      if (!window.adsbygoogle) {
+        window.adsbygoogle = [];
       }
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      if (Array.isArray(window.adsbygoogle)) {
+        window.adsbygoogle.push({});
+      }
     } catch (err) {
       console.error('AdSense error:', err);
     }
