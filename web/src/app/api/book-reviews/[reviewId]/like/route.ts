@@ -16,7 +16,7 @@ export async function POST(
     const { reviewId } = params;
 
     // Vérifier si le like existe déjà
-    const existingLike = await prisma.bookReviewLike.findUnique({
+    const existingLike = await prisma.like.findUnique({
       where: {
         userId_bookReviewId: {
           userId: authResult.userId,
@@ -29,7 +29,7 @@ export async function POST(
       return NextResponse.json({ message: 'Déjà liké' });
     }
 
-    await prisma.bookReviewLike.create({
+    await prisma.like.create({
       data: {
         userId: authResult.userId,
         bookReviewId: reviewId,
@@ -59,10 +59,12 @@ export async function DELETE(
 
     const { reviewId } = params;
 
-    await prisma.bookReviewLike.deleteMany({
+    await prisma.like.delete({
       where: {
-        userId: authResult.userId,
-        bookReviewId: reviewId,
+        userId_bookReviewId: {
+          userId: authResult.userId,
+          bookReviewId: reviewId,
+        },
       },
     });
 
