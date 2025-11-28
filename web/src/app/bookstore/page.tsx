@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import SEOHead from '@/components/SEOHead';
+import AdSense from '@/components/AdSense';
 import { booksApi } from '@/lib/api';
 import { BookOpen, ExternalLink, ShoppingCart, Star, Users } from 'lucide-react';
 import toast from 'react-hot-toast';

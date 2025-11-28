@@ -80,6 +80,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#065f46" />
         <link rel="icon" href="/logo.png" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9705213079025649"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`${inter.className} ${dancingScript.variable}`}>
         <StructuredData type="WebSite" />

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
+import AdSense from '@/components/AdSense';
 import { bookReviewApi, booksApi } from '@/lib/api';
 import { Star, Heart, MessageSquare, Plus, Trash2, Search, X, Edit2, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -616,8 +617,27 @@ export default function BooksPage() {
           </div>
         )}
 
+        {/* AdSense - Après le formulaire */}
+        <div className="mb-6 flex justify-center">
+          <AdSense
+            format="auto"
+            responsive={true}
+            style={{ display: 'block', minHeight: '100px' }}
+          />
+        </div>
+
         <div className="space-y-6">
-          {filteredReviews.map((review) => (
+          {filteredReviews.map((review, index) => (
+            <>
+              {index === Math.floor(filteredReviews.length / 2) && (
+                <div key={`ad-${index}`} className="my-6 flex justify-center">
+                  <AdSense
+                    format="auto"
+                    responsive={true}
+                    style={{ display: 'block', minHeight: '100px' }}
+                  />
+                </div>
+              )}
             <div key={review.id} className="card">
               <div className="flex gap-6">
                 {/* Image à gauche */}

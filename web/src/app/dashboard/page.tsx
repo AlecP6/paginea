@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
+import AdSense from '@/components/AdSense';
 import { postApi, commentApi } from '@/lib/api';
 import { Heart, MessageSquare, Send, Trash2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -159,6 +160,15 @@ export default function DashboardPage() {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* AdSense - Après le formulaire */}
+        <div className="mb-6 flex justify-center">
+          <AdSense
+            format="auto"
+            responsive={true}
+            style={{ display: 'block', minHeight: '100px' }}
+          />
         </div>
 
         {/* Posts Feed */}
