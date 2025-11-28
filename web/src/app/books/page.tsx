@@ -43,14 +43,15 @@ export default function BooksPage() {
   }, [isAuthenticated, router, loading]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user) {
       fetchReviews();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   const fetchReviews = async () => {
     try {
-      const response = await bookReviewApi.getReviews();
+      // Récupérer uniquement les critiques de l'utilisateur connecté
+      const response = await bookReviewApi.getReviews({ userId: user?.id });
       setReviews(response.data);
     } catch (error) {
       toast.error('Erreur lors du chargement des critiques');

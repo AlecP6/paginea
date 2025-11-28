@@ -59,6 +59,7 @@ export const bookReviewApi = {
   createReview: (data: any) => api.post('/book-reviews', data),
   getReviews: (params?: { userId?: string; status?: string; page?: number; limit?: number }) =>
     api.get('/book-reviews', { params }),
+  getFriendsReviews: () => api.get('/book-reviews/friends'),
   getReviewById: (reviewId: string) => api.get(`/book-reviews/${reviewId}`),
   updateReview: (reviewId: string, data: any) => api.put(`/book-reviews/${reviewId}`, data),
   deleteReview: (reviewId: string) => api.delete(`/book-reviews/${reviewId}`),

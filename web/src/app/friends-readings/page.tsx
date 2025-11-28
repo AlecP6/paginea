@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { bookReviewApi } from '@/lib/api';
-import { Star, Heart, MessageSquare, User as UserIcon } from 'lucide-react';
+import { Star, Heart, MessageSquare, User as UserIcon, ShoppingCart } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 
@@ -15,6 +15,33 @@ export default function FriendsReadingsPage() {
   const { isAuthenticated, loadUser, user } = useAuthStore();
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // ID Partenaire Amazon - À remplacer par votre propre ID après inscription
+  const AMAZON_AFFILIATE_ID = 'votreid-21';
+
+  // Fonction pour générer un lien Amazon avec affiliation optimisé
+  const getAmazonLink = (review: any) => {
+    // Nettoyer le titre (enlever sous-titres après : ou -)
+    const cleanTitle = review.bookTitle
+      .split(':')[0]
+      .split('-')[0]
+      .trim()
+      .replace(/[^\w\s]/g, '') // Enlever caractères spéciaux
+      .replace(/\s+/g, '+');
+    
+    // Nettoyer l'auteur
+    const cleanAuthor = review.bookAuthor
+      .trim()
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s+/g, '+');
+    
+    // Recherche optimisée par titre + auteur + "livre" pour de meilleurs résultats
+    const searchQuery = `${cleanTitle}+${cleanAuthor}+livre`;
+    
+    // Toujours utiliser la recherche (plus fiable que l'ISBN direct)
+    // avec filtre sur la catégorie Livres
+    return `https://www.amazon.fr/s?k=${searchQuery}&i=stripbooks&tag=${AMAZON_AFFILIATE_ID}`;
+  };
 
   useEffect(() => {
     loadUser();
@@ -35,10 +62,8 @@ export default function FriendsReadingsPage() {
   const fetchFriendsReviews = async () => {
     try {
       setLoading(true);
-      const response = await bookReviewApi.getReviews();
-      // Filtrer pour afficher uniquement les critiques des amis (pas les siennes)
-      const friendsReviews = response.data.filter((review: any) => review.author.id !== user?.id);
-      setReviews(friendsReviews);
+      const response = await bookReviewApi.getFriendsReviews();
+      setReviews(response.data);
     } catch (error) {
       console.error('Fetch friends reviews error:', error);
       toast.error('Erreur lors du chargement des lectures');
@@ -88,7 +113,7 @@ export default function FriendsReadingsPage() {
                 <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                   {review.author.avatar ? (
                     <Image
-                      src={`http://localhost:3001${review.author.avatar}`}
+                      src={review.author.avatar.startsWith('http') ? review.author.avatar : `${process.env.NEXT_PUBLIC_SITE_URL || ''}${review.author.avatar}`}
                       alt={review.author.username}
                       width={40}
                       height={40}
@@ -111,11 +136,14 @@ export default function FriendsReadingsPage() {
 
                 {/* Couverture du livre */}
                 {review.bookCover && (
-                  <div className="mb-4">
-                    <img
-                      src={review.bookCover.startsWith('http') ? review.bookCover : `http://localhost:3001${review.bookCover}`}
+                  <div className="mb-4 relative w-full h-64">
+                    <Image
+                      src={review.bookCover.startsWith('http') ? review.bookCover : `${process.env.NEXT_PUBLIC_SITE_URL || ''}${review.bookCover}`}
                       alt={`Couverture de ${review.bookTitle}`}
-                      className="w-full h-64 object-cover rounded-lg"
+                      fill
+                      className="object-cover rounded-lg"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      loading="lazy"
                     />
                   </div>
                 )}
@@ -169,6 +197,19 @@ export default function FriendsReadingsPage() {
                     {review.review}
                   </p>
                 )}
+
+                {/* Bouton Amazon */}
+                <div className="mb-4">
+                  <a
+                    href={getAmazonLink(review)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Trouver sur Amazon
+                  </a>
+                </div>
 
                 {/* Actions */}
                 <div className="flex items-center space-x-6 pt-4 border-t border-gray-200 dark:border-gray-700">
