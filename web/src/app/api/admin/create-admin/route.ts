@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { secret } = body;
+    const { secret, username: targetUsername, email: targetEmail } = body;
 
     // Vérifier le secret pour éviter la création accidentelle
     // Vous pouvez définir ADMIN_CREATE_SECRET dans vos variables d'environnement
@@ -18,6 +18,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Si un username ou email est spécifié, promouvoir cet utilisateur
+    if (targetUsername || targetEmail) {
+      const user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            targetUsername ? { username: targetUsername } : {},
+            targetEmail ? { email: targetEmail } : {},
+          ].filter(Boolean),
+        },
+      });
+
+      if (!user) {
+        return NextResponse.json(
+          { error: 'Utilisateur non trouvé' },
+          { status: 404 }
+        );
+      }
+
+      if (user.role === 'ADMIN') {
+        return NextResponse.json({
+          message: `L'utilisateur "${user.username}" est déjà admin`,
+          user: {
+            username: user.username,
+            email: user.email,
+            role: user.role,
+          },
+        });
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: { role: 'ADMIN' },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          role: true,
+        },
+      });
+
+      return NextResponse.json({
+        message: `Utilisateur "${updatedUser.username}" promu admin avec succès`,
+        user: updatedUser,
+      });
+    }
+
+    // Sinon, créer le compte Santa par défaut
     const username = 'Santa';
     const email = 'santa@paginea.fr';
     const password = 'Liqini@6';
