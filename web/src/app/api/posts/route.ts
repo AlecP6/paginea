@@ -8,6 +8,11 @@ export async function GET(request: NextRequest) {
     if ('error' in authResult) return authResult.error;
     const { userId } = authResult;
 
+    // Headers de cache
+    const headers = {
+      'Cache-Control': 'private, max-age=60, stale-while-revalidate=120',
+    };
+
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
     const userIdParam = searchParams.get('userId');
@@ -88,7 +93,7 @@ export async function GET(request: NextRequest) {
       likes: undefined,
     }));
 
-    return NextResponse.json(postsWithLikeStatus);
+    return NextResponse.json(postsWithLikeStatus, { headers });
   } catch (error: any) {
     console.error('Get posts error:', error);
     return NextResponse.json(

@@ -75,7 +75,12 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    return NextResponse.json(enrichedBooks);
+    // Headers de cache pour les données qui changent peu souvent
+    const headers = {
+      'Cache-Control': 'private, max-age=300, stale-while-revalidate=600',
+    };
+
+    return NextResponse.json(enrichedBooks, { headers });
   } catch (error: any) {
     console.error('Community recent books error:', error.message);
     console.error('Stack:', error.stack);

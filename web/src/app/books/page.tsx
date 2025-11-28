@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import { bookReviewApi, booksApi } from '@/lib/api';
@@ -620,19 +621,21 @@ export default function BooksPage() {
             <div key={review.id} className="card">
               <div className="flex gap-6">
                 {/* Image à gauche */}
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 relative w-48 h-64">
                   {review.bookCover ? (
-                    <img
-                      src={review.bookCover.startsWith('http') ? review.bookCover : `http://localhost:3001${review.bookCover}`}
+                    <Image
+                      src={review.bookCover.startsWith('http') ? review.bookCover : `${process.env.NEXT_PUBLIC_SITE_URL || ''}${review.bookCover}`}
                       alt={`Couverture de ${review.bookTitle}`}
-                      className="w-48 h-64 object-cover rounded-lg shadow-md"
+                      fill
+                      className="object-cover rounded-lg shadow-md"
+                      sizes="192px"
+                      loading="lazy"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement!.innerHTML = '<div class="w-48 h-64 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center"><svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></div>';
                       }}
                     />
                   ) : (
-                    <div className="w-48 h-64 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                    <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                       <BookOpen className="w-16 h-16 text-gray-400" />
                     </div>
                   )}
