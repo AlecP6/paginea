@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 export default function AdminPage() {
   const router = useRouter();
-  const { isAuthenticated, loadUser, user } = useAuthStore();
+  const { isAuthenticated, loadUser, user, isLoading: authLoading } = useAuthStore();
   const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'PENDING' | 'REVIEWED' | 'RESOLVED' | 'REJECTED'>('all');
@@ -20,7 +20,10 @@ export default function AdminPage() {
   }, [loadUser]);
 
   useEffect(() => {
-    if (!isAuthenticated && !loading) {
+    // Attendre que l'utilisateur soit chargé
+    if (authLoading) return; // Le store auth est encore en train de charger
+
+    if (!isAuthenticated) {
       router.push('/login');
       return;
     }
@@ -34,7 +37,7 @@ export default function AdminPage() {
     if (isAuthenticated && user?.role === 'ADMIN') {
       fetchReports();
     }
-  }, [isAuthenticated, user, router, loading]);
+  }, [isAuthenticated, user, router, authLoading]);
 
   const fetchReports = async () => {
     try {
@@ -119,10 +122,31 @@ export default function AdminPage() {
     }
   };
 
-  if (loading || !isAuthenticated || user?.role !== 'ADMIN') {
+  // Afficher le chargement si l'auth est en cours OU si on charge les reports
+  if (authLoading || (!isAuthenticated && !authLoading) || (isAuthenticated && user?.role !== 'ADMIN' && !authLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl text-white">Chargement...</div>
+      </div>
+    );
+  }
+
+  // Si on charge les reports mais que l'auth est OK, afficher la page avec le chargement des reports
+  if (loading && isAuthenticated && user?.role === 'ADMIN') {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <main className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="mb-6">
+            <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
+              <Flag className="w-10 h-10" /> Panel Administrateur
+            </h1>
+            <p className="text-white">Gérez les signalements de contenu</p>
+          </div>
+          <div className="card text-center text-white">
+            <p>Chargement des signalements...</p>
+          </div>
+        </main>
       </div>
     );
   }
