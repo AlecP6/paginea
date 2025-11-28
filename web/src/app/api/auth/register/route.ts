@@ -81,9 +81,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ user, token }, { status: 201 });
   } catch (error: any) {
     console.error('Register error:', error);
+    console.error('Error code:', error.code);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     
     // Erreurs spécifiques
-    if (error.message?.includes('JWT_SECRET')) {
+    if (error.message?.includes('JWT_SECRET') || !process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is missing!');
       return NextResponse.json(
         { error: 'Configuration serveur manquante. Veuillez contacter le support.' },
         { status: 500 }
@@ -97,9 +101,21 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    if (error.message?.includes('Can\'t reach database')) {
+    if (error.message?.includes('Can\'t reach database') || 
+        error.message?.includes('P1001') ||
+        error.code === 'P1001') {
+      console.error('Database connection error!');
       return NextResponse.json(
-        { error: 'Erreur de connexion à la base de données' },
+        { error: 'Erreur de connexion à la base de données. Vérifiez DATABASE_URL.' },
+        { status: 500 }
+      );
+    }
+    
+    // Erreur Prisma Client non généré
+    if (error.message?.includes('PrismaClient') || error.message?.includes('prisma')) {
+      console.error('Prisma Client error!');
+      return NextResponse.json(
+        { error: 'Erreur de configuration de la base de données' },
         { status: 500 }
       );
     }
@@ -107,7 +123,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Erreur lors de l\'inscription',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+        code: error.code || 'UNKNOWN'
       },
       { status: 500 }
     );
