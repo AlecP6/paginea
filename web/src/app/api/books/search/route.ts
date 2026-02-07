@@ -1,75 +1,125 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
-import axios from 'axios';
 
 const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes';
 
 export async function GET(request: NextRequest) {
   try {
+    // Vérifier l'authentification
     const authResult = requireAuth(request);
     if ('error' in authResult) {
       return authResult.error;
     }
 
+    // Récupérer le paramètre de recherche
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('query');
 
-    if (!query) {
+    if (!query || query.trim().length < 2) {
       return NextResponse.json(
-        { error: 'Le paramètre "query" est requis' },
+        { error: 'Veuillez entrer au moins 2 caractères pour la recherche' },
         { status: 400 }
       );
     }
 
-    // Recherche dans Google Books API
-    const response = await axios.get(GOOGLE_BOOKS_API, {
-      params: {
-        q: query,
-        maxResults: 10,
-        printType: 'books',
-        langRestrict: 'fr',
-      },
-    });
+    console.log(`🔍 Recherche Google Books pour: "${query}"`);
 
-    const books = response.data.items?.map((item: any) => {
-      const volumeInfo = item.volumeInfo;
-      
-      return {
-        googleBooksId: item.id,
-        title: volumeInfo.title || '',
-        authors: volumeInfo.authors || [],
-        author: volumeInfo.authors?.[0] || '',
-        publisher: volumeInfo.publisher || '',
-        publishedDate: volumeInfo.publishedDate || '',
-        description: volumeInfo.description || '',
-        isbn: volumeInfo.industryIdentifiers?.find((id: any) => id.type === 'ISBN_13')?.identifier ||
-              volumeInfo.industryIdentifiers?.find((id: any) => id.type === 'ISBN_10')?.identifier ||
-              '',
-        pageCount: volumeInfo.pageCount || 0,
-        categories: volumeInfo.categories || [],
-        language: volumeInfo.language || '',
-        coverImage: volumeInfo.imageLinks?.thumbnail?.replace('http://', 'https://') ||
-                    volumeInfo.imageLinks?.smallThumbnail?.replace('http://', 'https://') ||
-                    '',
-        previewLink: volumeInfo.previewLink || '',
-        infoLink: volumeInfo.infoLink || '',
-      };
-    }) || [];
-
-    return NextResponse.json(books);
-  } catch (error: any) {
-    console.error('Google Books search error:', error.message);
-    if (error.response) {
-      return NextResponse.json(
-        {
-          error: 'Erreur lors de la recherche de livres',
-          details: error.response.data,
-        },
-        { status: error.response.status }
-      );
+    // Appel à Google Books API
+    const url = new URL(GOOGLE_BOOKS_API);
+    url.searchParams.append('q', query);
+    url.searchParams.append('maxResults', '10');
+    url.searchParams.append('printType', 'books');
+    url.searchParams.append('langRestrict', 'fr');
+    
+    // Ajouter la clé API si disponible
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    if (apiKey) {
+      url.searchParams.append('key', apiKey);
+      console.log('🔑 Utilisation de la clé API Google Books');
     }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 secondes timeout
+
+    try {
+      const response = await fetch(url.toString(), {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        console.error(`❌ Google Books API erreur: ${response.status}`);
+        throw new Error(`Google Books API returned ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Vérifier si des résultats existent
+      if (!data.items || data.items.length === 0) {
+        console.log('📚 Aucun résultat trouvé');
+        return NextResponse.json([]);
+      }
+
+      console.log(`✅ ${data.items.length} livres trouvés`);
+
+      // Formater les résultats
+      const books = data.items.map((item: any) => {
+        const info = item.volumeInfo || {};
+        
+        return {
+          googleBooksId: item.id || '',
+          title: info.title || 'Titre inconnu',
+          authors: info.authors || [],
+          author: (info.authors && info.authors[0]) || 'Auteur inconnu',
+          publisher: info.publisher || '',
+          publishedDate: info.publishedDate || '',
+          description: info.description || '',
+          isbn: 
+            (info.industryIdentifiers?.find((id: any) => id.type === 'ISBN_13')?.identifier) ||
+            (info.industryIdentifiers?.find((id: any) => id.type === 'ISBN_10')?.identifier) ||
+            '',
+          pageCount: info.pageCount || 0,
+          categories: info.categories || [],
+          language: info.language || 'fr',
+          coverImage: 
+            (info.imageLinks?.thumbnail || '')
+              .replace('http://', 'https://') ||
+            (info.imageLinks?.smallThumbnail || '')
+              .replace('http://', 'https://') ||
+            '',
+          previewLink: info.previewLink || '',
+          infoLink: info.infoLink || '',
+        };
+      });
+
+      return NextResponse.json(books);
+
+    } catch (fetchError: any) {
+      clearTimeout(timeoutId);
+      
+      if (fetchError.name === 'AbortError') {
+        console.error('⏱️ Timeout de la requête Google Books');
+        return NextResponse.json(
+          { error: 'La recherche a pris trop de temps. Réessayez.' },
+          { status: 408 }
+        );
+      }
+      
+      throw fetchError;
+    }
+
+  } catch (error: any) {
+    console.error('❌ Erreur recherche Google Books:', error.message);
+    
     return NextResponse.json(
-      { error: 'Erreur lors de la recherche de livres' },
+      { 
+        error: 'Impossible de rechercher des livres pour le moment',
+        message: 'Vérifiez votre connexion ou réessayez plus tard',
+      },
       { status: 500 }
     );
   }

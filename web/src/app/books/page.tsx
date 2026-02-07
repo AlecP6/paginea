@@ -63,18 +63,57 @@ export default function BooksPage() {
   };
 
   const handleSearchBooks = async (query: string) => {
-    if (!query || query.length < 2) {
+    if (!query || query.trim().length < 2) {
       setSearchResults([]);
       return;
     }
 
     setIsSearching(true);
+    setSearchResults([]);
+    
     try {
+      console.log(`🔍 Recherche de: "${query}"`);
       const response = await booksApi.searchBooks(query);
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error('Erreur recherche:', error);
-      toast.error('Erreur lors de la recherche de livres');
+      
+      console.log('✅ Résultats reçus:', response.data);
+      
+      if (response.data && Array.isArray(response.data)) {
+        setSearchResults(response.data);
+        
+        if (response.data.length === 0) {
+          toast('Aucun livre trouvé pour cette recherche', { 
+            icon: '📚',
+            duration: 3000,
+          });
+        } else {
+          toast.success(`${response.data.length} livre(s) trouvé(s)`);
+        }
+      } else {
+        setSearchResults([]);
+        toast.error('Format de réponse inattendu');
+      }
+      
+    } catch (error: any) {
+      console.error('❌ Erreur recherche:', error);
+      console.error('❌ Error details:', error.response);
+      
+      setSearchResults([]);
+      
+      // Messages d'erreur plus explicites
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        toast.error('Problème d\'authentification. Reconnectez-vous.');
+      } else if (error.response?.status === 408) {
+        toast.error('La recherche a pris trop de temps. Réessayez.');
+      } else if (error.response?.status === 429) {
+        toast.error('Trop de requêtes. Patientez quelques secondes.');
+      } else if (error.response?.data?.error) {
+        toast.error(error.response.data.error);
+      } else if (error.message?.includes('Network')) {
+        toast.error('Erreur réseau. Vérifiez votre connexion.');
+      } else {
+        toast.error('La recherche de livres est temporairement indisponible. Vous pouvez saisir manuellement.');
+      }
+      
     } finally {
       setIsSearching(false);
     }
