@@ -110,7 +110,24 @@ export async function GET(request: NextRequest) {
       console.error(`❌ [API] Google Books API erreur: ${error.response.status}`);
       console.error('❌ [API] Details:', error.response.data);
       
+      // Gestion spécifique du quota dépassé (429)
       if (error.response.status === 429) {
+        const errorData = error.response.data?.error;
+        
+        // Vérifier si c'est un dépassement de quota Google
+        if (errorData?.message?.includes('Quota exceeded')) {
+          console.error('📊 [API] Quota Google Books API dépassé !');
+          return NextResponse.json(
+            { 
+              error: '⚠️ Quota journalier Google Books dépassé',
+              message: 'Trop de recherches aujourd\'hui. Réessayez demain ou activez la facturation Google Cloud pour augmenter le quota.',
+              details: 'Le quota se réinitialise à minuit UTC (00:00 GMT)'
+            },
+            { status: 429 }
+          );
+        }
+        
+        // Autres erreurs 429
         return NextResponse.json(
           { error: 'Trop de requêtes. Patientez quelques secondes.' },
           { status: 429 }

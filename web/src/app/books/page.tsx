@@ -105,9 +105,29 @@ export default function BooksPage() {
       } else if (error.response?.status === 408) {
         toast.error('La recherche a pris trop de temps. Réessayez.');
       } else if (error.response?.status === 429) {
-        toast.error('Trop de requêtes. Patientez quelques secondes.');
+        // Cas spécial : quota Google Books dépassé
+        const errorMessage = error.response?.data?.error || '';
+        const errorDetails = error.response?.data?.details || '';
+        
+        if (errorMessage.includes('Quota') || errorMessage.includes('quota')) {
+          toast.error(
+            `${errorMessage}\n${errorDetails}`,
+            { 
+              duration: 8000,
+              icon: '⚠️',
+              style: {
+                background: '#FEF3C7',
+                color: '#92400E',
+                border: '2px solid #F59E0B',
+                maxWidth: '500px',
+              }
+            }
+          );
+        } else {
+          toast.error('Trop de requêtes. Patientez quelques secondes.');
+        }
       } else if (error.response?.data?.error) {
-        toast.error(error.response.data.error);
+        toast.error(error.response.data.error, { duration: 5000 });
       } else if (error.message?.includes('Network')) {
         toast.error('Erreur réseau. Vérifiez votre connexion.');
       } else {
