@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
 
     // Enrichir avec les couvertures Google Books si manquantes
     const enrichedReviews = await Promise.all(
-      bookReviews.map(async (review) => {
+      bookReviews.map(async (review: any) => {
         let bookCover = review.bookCover;
 
         if (!bookCover) {
