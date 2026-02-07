@@ -379,7 +379,7 @@ export default function BooksPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'ALL'
                 ? 'bg-primary-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             Tous <span className="ml-1.5 text-sm opacity-75">({counts.ALL})</span>
@@ -389,7 +389,7 @@ export default function BooksPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'READ'
                 ? 'bg-green-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             📚 Lu <span className="ml-1.5 text-sm opacity-75">({counts.READ})</span>
@@ -399,7 +399,7 @@ export default function BooksPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'READING'
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             📖 En cours <span className="ml-1.5 text-sm opacity-75">({counts.READING})</span>
@@ -409,7 +409,7 @@ export default function BooksPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'WANT_TO_READ'
                 ? 'bg-yellow-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             🔖 À lire <span className="ml-1.5 text-sm opacity-75">({counts.WANT_TO_READ})</span>
@@ -419,7 +419,7 @@ export default function BooksPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'ABANDONED'
                 ? 'bg-gray-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             ⏸️ Abandonné <span className="ml-1.5 text-sm opacity-75">({counts.ABANDONED})</span>
@@ -434,7 +434,7 @@ export default function BooksPage() {
               </h2>
               <button
                 onClick={handleCancelEdit}
-                className="text-white hover:text-white dark:hover:text-white"
+                className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -445,22 +445,33 @@ export default function BooksPage() {
                 <label className="block text-sm font-medium text-primary-900 dark:text-primary-100 mb-2">
                   🔍 Rechercher dans Google Books
                 </label>
-                <div className="relative">
+                <div className="relative flex gap-2">
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      handleSearchBooks(e.target.value);
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSearchBooks(searchQuery);
+                      }
                     }}
                     placeholder="Tapez le titre ou l'auteur d'un livre..."
-                    className="input-field pr-10"
+                    className="input-field flex-1"
                   />
-                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
+                  <button
+                    type="button"
+                    onClick={() => handleSearchBooks(searchQuery)}
+                    disabled={isSearching || searchQuery.length < 2}
+                    className="btn-primary px-4 py-2 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Search className="w-5 h-5" />
+                    <span className="hidden sm:inline">Rechercher</span>
+                  </button>
                 </div>
                 
                 {isSearching && (
-                  <p className="text-sm text-white mt-2">Recherche en cours...</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">Recherche en cours...</p>
                 )}
                 
                 {searchResults.length > 0 && (
@@ -479,14 +490,14 @@ export default function BooksPage() {
                           />
                         )}
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-white truncate">
+                          <h4 className="font-semibold text-gray-900 dark:text-white truncate">
                             {book.title}
                           </h4>
-                          <p className="text-sm text-white dark:text-white truncate">
+                          <p className="text-sm text-gray-700 dark:text-gray-300 truncate">
                             {book.author}
                           </p>
                           {book.publishedDate && (
-                            <p className="text-xs text-white dark:text-white">
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
                               {book.publishedDate}
                             </p>
                           )}
@@ -513,10 +524,10 @@ export default function BooksPage() {
                         <p className="text-sm font-medium text-green-900 dark:text-green-100">
                           ✅ Livre sélectionné
                         </p>
-                        <h4 className="font-semibold text-white mt-1">
+                        <h4 className="font-semibold text-green-900 dark:text-green-100 mt-1">
                           {selectedBook.title}
                         </h4>
-                        <p className="text-sm text-white dark:text-white">
+                        <p className="text-sm text-green-800 dark:text-green-200">
                           {selectedBook.author}
                         </p>
                       </div>
@@ -524,7 +535,7 @@ export default function BooksPage() {
                     <button
                       type="button"
                       onClick={handleClearSelection}
-                      className="text-white hover:text-red-500 transition-colors"
+                      className="text-green-900 hover:text-red-600 dark:text-green-100 dark:hover:text-red-400 transition-colors"
                       title="Changer de livre"
                     >
                       <X className="w-5 h-5" />
@@ -537,7 +548,7 @@ export default function BooksPage() {
               {selectedBook && (
                 <div className="flex items-center space-x-4 py-2">
                   <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
-                  <span className="text-sm text-white dark:text-white">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
                     ou modifier les informations
                   </span>
                   <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
@@ -545,7 +556,7 @@ export default function BooksPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-white dark:text-white mb-2">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Titre du livre *
                 </label>
                 <input
@@ -560,7 +571,7 @@ export default function BooksPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white dark:text-white mb-2">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Auteur *
                 </label>
                 <input
@@ -575,7 +586,7 @@ export default function BooksPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white dark:text-white mb-2">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Couverture du livre
                 </label>
                 <input
@@ -596,7 +607,7 @@ export default function BooksPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white dark:text-white mb-2">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Note *
                 </label>
                 <div className="flex items-center space-x-2">
@@ -611,7 +622,7 @@ export default function BooksPage() {
                         className={`w-8 h-8 transition-colors ${
                           star <= formData.rating
                             ? 'text-yellow-500 fill-yellow-500'
-                            : 'text-white'
+                            : 'text-gray-400 dark:text-gray-600'
                         }`}
                       />
                     </button>
@@ -623,7 +634,7 @@ export default function BooksPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white dark:text-white mb-2">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Statut
                 </label>
                 <select
@@ -641,7 +652,7 @@ export default function BooksPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white dark:text-white mb-2">
+                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Votre avis
                 </label>
                 <textarea
@@ -718,7 +729,7 @@ export default function BooksPage() {
                     />
                   ) : (
                     <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                      <BookOpen className="w-16 h-16 text-white" />
+                      <BookOpen className="w-16 h-16 text-gray-400 dark:text-gray-500" />
                     </div>
                   )}
                 </div>
@@ -742,7 +753,7 @@ export default function BooksPage() {
                         <span className="font-semibold dark:text-white">
                           {review.author.username}
                         </span>
-                        <span className="text-white text-sm ml-2">
+                        <span className="text-gray-700 dark:text-gray-300 text-sm ml-2">
                           {new Date(review.createdAt).toLocaleDateString('fr-FR')}
                         </span>
                       </div>
@@ -751,14 +762,14 @@ export default function BooksPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleEditReview(review)}
-                          className="text-white hover:text-primary-600 transition-colors"
+                          className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                           title="Modifier cet avis"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteReview(review.id)}
-                          className="text-white hover:text-red-500 transition-colors"
+                          className="text-gray-600 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
                           title="Supprimer cet avis"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -768,7 +779,7 @@ export default function BooksPage() {
                     {user && review.author.id !== user.id && (
                       <button
                         onClick={() => setReportModal({ isOpen: true, contentType: 'bookReview', contentId: review.id })}
-                        className="text-white hover:text-yellow-500 transition-colors"
+                        className="text-gray-600 hover:text-yellow-600 dark:text-gray-400 dark:hover:text-yellow-400 transition-colors"
                         title="Signaler cette critique"
                       >
                         <Flag className="w-4 h-4" />
@@ -779,7 +790,7 @@ export default function BooksPage() {
                   <h3 className="text-2xl font-bold dark:text-white mb-1">
                     {review.bookTitle}
                   </h3>
-                  <p className="text-white dark:text-white mb-3">
+                  <p className="text-gray-700 dark:text-gray-300 mb-3">
                     par {review.bookAuthor}
                   </p>
 
@@ -793,7 +804,7 @@ export default function BooksPage() {
                         className={`w-5 h-5 ${
                           star <= starRating
                             ? 'text-yellow-500 fill-yellow-500'
-                            : 'text-white'
+                            : 'text-gray-400 dark:text-gray-600'
                         }`}
                       />
                     );
@@ -803,7 +814,7 @@ export default function BooksPage() {
               </div>
 
               {review.review && (
-                <p className="text-white mb-4">
+                <p className="text-gray-800 dark:text-gray-200 mb-4">
                   {review.review}
                 </p>
               )}
@@ -814,7 +825,7 @@ export default function BooksPage() {
                       className={`flex items-center space-x-2 ${
                         review.isLiked
                           ? 'text-red-500'
-                          : 'text-white hover:text-red-500'
+                          : 'text-gray-600 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400'
                       }`}
                     >
                       <Heart
@@ -824,7 +835,7 @@ export default function BooksPage() {
                       <span>{review._count.likes}</span>
                     </button>
 
-                    <button className="flex items-center space-x-2 text-white hover:text-primary-600">
+                    <button className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">
                       <MessageSquare className="w-5 h-5" />
                       <span>{review._count.comments}</span>
                     </button>
@@ -836,7 +847,7 @@ export default function BooksPage() {
           ))}
 
           {filteredReviews.length === 0 && (
-            <div className="card text-center text-white">
+            <div className="card text-center text-gray-700 dark:text-gray-300">
               <p>
                 {activeTab === 'ALL' && 'Aucun livre pour le moment. Ajoutez-en un !'}
                 {activeTab === 'READ' && 'Aucun livre lu pour le moment.'}
@@ -852,19 +863,19 @@ export default function BooksPage() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 mt-12 border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-center md:text-left text-white dark:text-white">
+          <div className="text-center md:text-left text-gray-700 dark:text-gray-300">
             <p>&copy; 2025 Paginea. Tous droits réservés.</p>
           </div>
           <div className="flex space-x-6">
             <button
               onClick={() => router.push('/about')}
-              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               À propos
             </button>
             <button
               onClick={() => router.push('/legal')}
-              className="text-white dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Mentions légales
             </button>
