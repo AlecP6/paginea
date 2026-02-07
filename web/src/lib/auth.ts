@@ -102,7 +102,7 @@ export function requireAuth(request: NextRequest): { userId: string } | { error:
  * @param expiresIn - Durée de validité (défaut: 30 jours)
  * @returns Le token JWT
  */
-export function generateToken(userId: string, expiresIn: string = '30d'): string {
+export function generateToken(userId: string, expiresIn: string | number = '30d'): string {
   const jwtSecret = process.env.JWT_SECRET;
   
   if (!jwtSecret) {
@@ -115,11 +115,11 @@ export function generateToken(userId: string, expiresIn: string = '30d'): string
   };
 
   return jwt.sign(payload, jwtSecret, {
-    expiresIn,
+    expiresIn: expiresIn as string,
     algorithm: 'HS256',
     issuer: 'paginea-api',
     audience: 'paginea-app',
-  });
+  } as jwt.SignOptions);
 }
 
 /**
