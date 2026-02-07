@@ -72,9 +72,26 @@ export default function BooksPage() {
     try {
       const response = await booksApi.searchBooks(query);
       setSearchResults(response.data);
-    } catch (error) {
-      console.error('Erreur recherche:', error);
-      toast.error('Erreur lors de la recherche de livres');
+      
+      // Si aucun résultat
+      if (!response.data || response.data.length === 0) {
+        toast('Aucun livre trouvé. Essayez une autre recherche.', { icon: '📚' });
+      }
+    } catch (error: any) {
+      console.error('❌ Erreur recherche complète:', error);
+      console.error('❌ Response data:', error.response?.data);
+      console.error('❌ Status:', error.response?.status);
+      
+      // Message d'erreur personnalisé selon le type
+      if (error.response?.status === 429) {
+        toast.error('Trop de requêtes. Veuillez patienter quelques instants.');
+      } else if (error.response?.status === 408) {
+        toast.error('La recherche a pris trop de temps. Réessayez.');
+      } else if (error.response?.data?.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error('Erreur lors de la recherche de livres. Vérifiez votre connexion.');
+      }
     } finally {
       setIsSearching(false);
     }
