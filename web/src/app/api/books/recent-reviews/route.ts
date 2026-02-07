@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     });
 
     const enrichedBooks = await Promise.all(
-      recentReviews.map(async (review) => {
+      recentReviews.map(async (review: any) => {
         let bookCover = review.bookCover;
 
         // Si la couverture n'est pas présente, essayer de la récupérer via Google Books
