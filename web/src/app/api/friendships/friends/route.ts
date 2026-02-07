@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const friends = friendships.map((f) => {
+    const friends = friendships.map((f: any) => {
       if (f.initiatorId === targetUserId) {
         return { friendshipId: f.id, ...f.receiver };
       } else {

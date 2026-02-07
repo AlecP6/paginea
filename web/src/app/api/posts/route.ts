@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const friendIds = friendships.map((f) =>
+    const friendIds = friendships.map((f: { initiatorId: string; receiverId: string }) =>
       f.initiatorId === userId ? f.receiverId : f.initiatorId
     );
 
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    const postsWithLikeStatus = posts.map((post) => ({
+    const postsWithLikeStatus = posts.map((post: any) => ({
       ...post,
       isLiked: post.likes.length > 0,
       likes: undefined,
