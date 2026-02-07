@@ -297,17 +297,28 @@ body::before {
     background: linear-gradient(180deg, #16a34a, #15803d);
   }
   
-  /* Forcer tous les textes en blanc sauf les boutons */
-  p, span, h1, h2, h3, h4, h5, h6, div, label, li, td, th {
-    color: #ffffff !important;
+  /* Forcer la plupart des textes en blanc, mais permettre les exceptions */
+  main p:not([class*="toast"] *),
+  main span:not([class*="toast"] *):not(button *),
+  main h1, main h2, main h3, main h4, main h5, main h6,
+  main div:not([class*="toast"] *):not(button):not(button *),
+  main label:not(button *),
+  main li, main td, main th {
+    color: #ffffff;
   }
   
-  /* Exceptions pour les boutons */
-  .btn-primary,
-  .btn-secondary,
+  /* Exceptions: conserver les couleurs définies dans les classes Tailwind */
+  .text-gray-900,
+  .text-gray-800,
+  .text-gray-700,
+  .text-gray-600,
+  .text-gray-500,
+  .text-green-900,
+  .text-green-800,
+  .text-primary-900,
+  [class*="text-"],
   button,
-  input[type="submit"],
-  input[type="button"] {
+  button * {
     color: inherit !important;
   }
 }
