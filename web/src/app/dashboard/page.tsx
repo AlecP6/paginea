@@ -152,7 +152,10 @@ export default function DashboardPage() {
   if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Chargement...</div>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-16 h-16 border-4 border-primary-500/30 border-t-primary-500 rounded-full animate-spin"></div>
+          <p className="text-xl text-white/70 animate-pulse">Chargement...</p>
+        </div>
       </div>
     );
   }
@@ -162,17 +165,25 @@ export default function DashboardPage() {
       <Navbar />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
-        {/* Create Post */}
-        <div className="card mb-6">
+        {/* Create Post avec style moderne */}
+        <div className="card mb-6 animate-fadeInScale">
           <form onSubmit={handleCreatePost}>
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
-              placeholder="Quoi de neuf sur vos lectures ?"
-              className="input-field min-h-[100px] resize-none"
+              placeholder="Quoi de neuf sur vos lectures ? 📚"
+              className="input-field min-h-[120px] resize-none focus:min-h-[150px] transition-all duration-300"
+              maxLength={5000}
             />
-            <div className="flex justify-end mt-4">
-              <button type="submit" className="btn-primary flex items-center space-x-2">
+            <div className="flex justify-between items-center mt-4">
+              <span className="text-sm text-white/50">
+                {newPost.length}/5000 caractères
+              </span>
+              <button 
+                type="submit" 
+                disabled={!newPost.trim()}
+                className="btn-primary flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <Send className="w-4 h-4" />
                 <span>Publier</span>
               </button>
@@ -189,38 +200,47 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Posts Feed */}
+        {/* Posts Feed avec animations */}
         <div className="space-y-6">
-          {posts.map((post) => (
-            <div key={post.id} className="card">
+          {posts.map((post, index) => (
+            <div 
+              key={post.id} 
+              className="card animate-fadeIn"
+              style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'backwards' }}
+            >
               <div className="flex items-start space-x-3">
                 {post.author.avatar ? (
                   <img
                     src={post.author.avatar.startsWith('http') ? post.author.avatar : `http://localhost:3001${post.author.avatar}`}
                     alt={post.author.username}
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="avatar w-12 h-12"
                   />
                 ) : (
-                  <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="avatar w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-bold shadow-lg">
                     {post.author.username[0].toUpperCase()}
                   </div>
                 )}
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="font-semibold dark:text-white">
+                      <span className="font-bold dark:text-white hover:text-primary-400 transition-colors cursor-pointer">
                         {post.author.username}
                       </span>
-                      <span className="text-white text-sm">·</span>
-                      <span className="text-white text-sm">
-                        {new Date(post.createdAt).toLocaleDateString('fr-FR')}
+                      <span className="text-white/50 text-sm">·</span>
+                      <span className="text-white/50 text-sm">
+                        {new Date(post.createdAt).toLocaleDateString('fr-FR', {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
                       {user && post.author.id !== user.id && (
                         <button
                           onClick={() => setReportModal({ isOpen: true, contentType: 'post', contentId: post.id })}
-                          className="text-white hover:text-yellow-500 transition-colors"
+                          className="p-2 text-white/50 hover:text-yellow-500 hover:bg-yellow-500/10 rounded-lg transition-all duration-200"
                           title="Signaler ce post"
                         >
                           <Flag className="w-4 h-4" />
@@ -229,7 +249,7 @@ export default function DashboardPage() {
                       {user && post.author.id === user.id && (
                         <button
                           onClick={() => handleDeletePost(post.id)}
-                          className="text-white hover:text-red-500 transition-colors"
+                          className="p-2 text-white/50 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all duration-200"
                           title="Supprimer ce post"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -237,36 +257,38 @@ export default function DashboardPage() {
                       )}
                     </div>
                   </div>
-                  <p className="mt-2 text-white dark:text-white">
+                  <p className="mt-3 text-white/90 dark:text-white leading-relaxed">
                     {post.content}
                   </p>
 
                   <div className="flex items-center space-x-6 mt-4">
                     <button
                       onClick={() => handleLike(post.id, post.isLiked)}
-                      className={`flex items-center space-x-2 transition-colors ${
+                      className={`group flex items-center space-x-2 transition-all duration-300 px-3 py-2 rounded-lg ${
                         post.isLiked
-                          ? 'text-red-500'
-                          : 'text-white hover:text-red-500'
+                          ? 'text-red-500 bg-red-500/10'
+                          : 'text-white/70 hover:text-red-500 hover:bg-red-500/10'
                       }`}
                     >
                       <Heart
-                        className="w-5 h-5"
+                        className={`w-5 h-5 transition-transform group-hover:scale-125 ${
+                          post.isLiked ? 'animate-bounceIn' : ''
+                        }`}
                         fill={post.isLiked ? 'currentColor' : 'none'}
                       />
-                      <span>{post._count.likes}</span>
+                      <span className="font-semibold">{post._count.likes}</span>
                     </button>
 
                     <button
                       onClick={() => toggleComments(post.id)}
-                      className={`flex items-center space-x-2 transition-colors ${
+                      className={`group flex items-center space-x-2 transition-all duration-300 px-3 py-2 rounded-lg ${
                         expandedPostId === post.id
-                          ? 'text-primary-600'
-                          : 'text-white hover:text-primary-600'
+                          ? 'text-primary-500 bg-primary-500/10'
+                          : 'text-white/70 hover:text-primary-500 hover:bg-primary-500/10'
                       }`}
                     >
-                      <MessageSquare className="w-5 h-5" />
-                      <span>{post._count.comments}</span>
+                      <MessageSquare className="w-5 h-5 transition-transform group-hover:scale-110" />
+                      <span className="font-semibold">{post._count.comments}</span>
                     </button>
                   </div>
 

@@ -40,28 +40,261 @@ body::before {
   position: fixed;
   inset: 0;
   background: radial-gradient(ellipse at center, rgba(2, 30, 24, 0.4), transparent);
-  animation: pulse 4s ease-in-out infinite;
+  animation: pulse-ambient 4s ease-in-out infinite;
   pointer-events: none;
 }
 
-@keyframes pulse {
+/* Animations modernes */
+@keyframes pulse-ambient {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.6; }
 }
 
+@keyframes fadeIn {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 @layer components {
+  /* Boutons modernes avec effets dynamiques */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 
+           text-white font-semibold py-3 px-6 rounded-xl 
+           transition-all duration-300 ease-out
+           shadow-lg hover:shadow-xl hover:shadow-primary-500/50
+           transform hover:scale-105 hover:-translate-y-0.5
+           active:scale-95 active:translate-y-0
+           focus:ring-4 focus:ring-primary-500/50 focus:outline-none
+           relative overflow-hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+    @apply bg-gray-700/80 hover:bg-gray-600 backdrop-blur-sm
+           text-white font-semibold py-3 px-6 rounded-xl 
+           transition-all duration-300
+           border border-gray-600 hover:border-gray-500
+           shadow-md hover:shadow-lg
+           transform hover:scale-105
+           active:scale-95
+           focus:ring-4 focus:ring-gray-500/50 focus:outline-none;
   }
   
+  /* Input fields modernes */
   .input-field {
-    @apply w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-white transition-all;
-    background-color: #1f2937;
-    border-color: rgba(75, 85, 99, 0.3);
+    @apply w-full px-4 py-3 border-2 rounded-xl 
+           focus:ring-4 focus:ring-primary-500/30 focus:border-primary-500 
+           text-white transition-all duration-300 ease-out
+           placeholder-gray-400
+           transform focus:scale-[1.02];
+    background-color: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(10px);
+    border-color: rgba(75, 85, 99, 0.4);
+  }
+  
+  .input-field:focus {
+    background-color: rgba(31, 41, 55, 0.95);
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+  
+  /* Cards modernes avec effets glassmorphism */
+  .card {
+    @apply rounded-2xl shadow-xl p-6 
+           transition-all duration-500 ease-out
+           backdrop-blur-md
+           border border-gray-700/50
+           hover:shadow-2xl hover:shadow-primary-900/20
+           transform hover:-translate-y-1
+           relative overflow-hidden;
+    background: linear-gradient(145deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.8));
+    animation: fadeInScale 0.5s ease-out;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .card:hover::before {
+    opacity: 1;
+  }
+  
+  /* Card avec animation au scroll */
+  .card-animated {
+    @apply card;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  /* Badge moderne */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+           transition-all duration-300
+           transform hover:scale-110;
+  }
+  
+  /* Avatar avec effet */
+  .avatar {
+    @apply rounded-full transition-all duration-300
+           ring-2 ring-gray-700 hover:ring-4 hover:ring-primary-500
+           transform hover:scale-110 hover:rotate-3;
+  }
+  
+  /* Skeleton loader moderne */
+  .skeleton {
+    @apply bg-gray-700/50 rounded animate-pulse;
+    background: linear-gradient(
+      90deg,
+      rgba(55, 65, 81, 0.5) 0%,
+      rgba(75, 85, 99, 0.5) 50%,
+      rgba(55, 65, 81, 0.5) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  /* Divider élégant */
+  .divider {
+    @apply my-6 border-t border-gray-700/50 relative;
+  }
+  
+  .divider::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #22c55e, transparent);
+  }
+  
+  /* Tooltip moderne */
+  .tooltip {
+    @apply absolute z-50 px-3 py-2 text-sm font-medium text-white 
+           bg-gray-900 rounded-lg shadow-xl
+           opacity-0 invisible transition-all duration-200
+           transform translate-y-2;
+  }
+  
+  .tooltip-trigger:hover .tooltip {
+    @apply opacity-100 visible translate-y-0;
+  }
+  
+  /* Scrollbar personnalisée */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.3);
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #22c55e, #16a34a);
+    border-radius: 10px;
+    transition: background 0.3s;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #16a34a, #15803d);
   }
   
   /* Forcer tous les textes en blanc sauf les boutons */
@@ -77,18 +310,50 @@ body::before {
   input[type="button"] {
     color: inherit !important;
   }
-  
-  .card {
-    @apply rounded-lg shadow-md p-6 transition-all;
-    background-color: #1f2937;
-    border: 1px solid rgba(75, 85, 99, 0.3);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Utilities personnalisées */
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
   }
   
-  .card-wood {
-    background-color: #1f2937;
-    border: 1px solid rgba(75, 85, 99, 0.3);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  .animate-fadeInScale {
+    animation: fadeInScale 0.5s ease-out;
+  }
+  
+  .animate-slideInRight {
+    animation: slideInFromRight 0.5s ease-out;
+  }
+  
+  .animate-slideInLeft {
+    animation: slideInFromLeft 0.5s ease-out;
+  }
+  
+  .animate-bounceIn {
+    animation: bounceIn 0.6s ease-out;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-400 to-emerald-400 bg-clip-text text-transparent;
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glow {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+  }
+  
+  .glow-hover:hover {
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
   }
 }
 

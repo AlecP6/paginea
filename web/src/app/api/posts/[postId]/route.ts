@@ -42,6 +42,7 @@ export async function GET(
         _count: {
           select: {
             likes: true,
+            comments: true,  // Ajout du compteur de commentaires
           },
         },
         likes: {

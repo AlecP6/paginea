@@ -2,32 +2,54 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
+import { 
+  validateEmail, 
+  validateUsername, 
+  validateStrongPassword,
+  sanitizeString 
+} from '@/lib/validation';
+import { rateLimiter, getClientIp, RateLimitConfigs, createRateLimitResponse } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
   console.log('🔵 Register route called');
   try {
     const body = await request.json();
     console.log('🔵 Register body received:', { email: body.email, username: body.username });
+    
+    // Rate limiting par IP
+    const clientIp = getClientIp(request);
+    const rateLimitResult = rateLimiter.check(`register:${clientIp}`, {
+      maxAttempts: 3,
+      windowMs: 60 * 60 * 1000, // 1 heure
+      blockDurationMs: 2 * 60 * 60 * 1000, // 2 heures
+    });
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(rateLimitResult.retryAfter || 7200);
+    }
+    
     const { email, username, password, firstName, lastName } = body;
 
-    // Validation
-    if (!email || !email.includes('@')) {
+    // Validation avec les nouvelles fonctions sécurisées
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
       return NextResponse.json(
-        { error: 'Email invalide' },
+        { error: emailValidation.error },
         { status: 400 }
       );
     }
 
-    if (!username || username.length < 3) {
+    const usernameValidation = validateUsername(username);
+    if (!usernameValidation.isValid) {
       return NextResponse.json(
-        { error: 'Le nom d\'utilisateur doit contenir au moins 3 caractères' },
+        { error: usernameValidation.error },
         { status: 400 }
       );
     }
 
-    if (!password || password.length < 6) {
+    const passwordValidation = validateStrongPassword(password);
+    if (!passwordValidation.isValid) {
       return NextResponse.json(
-        { error: 'Le mot de passe doit contenir au moins 6 caractères' },
+        { error: passwordValidation.error },
         { status: 400 }
       );
     }
@@ -35,7 +57,10 @@ export async function POST(request: NextRequest) {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [{ email }, { username }],
+        OR: [
+          { email: email.toLowerCase().trim() }, 
+          { username: username.trim() }
+        ],
       },
     });
 
@@ -46,17 +71,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hasher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hasher le mot de passe avec un coût plus élevé pour plus de sécurité
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Sanitize les champs optionnels
+    const sanitizedFirstName = firstName ? sanitizeString(firstName) : undefined;
+    const sanitizedLastName = lastName ? sanitizeString(lastName) : undefined;
 
     // Créer l'utilisateur
     const user = await prisma.user.create({
       data: {
-        email,
-        username,
+        email: email.toLowerCase().trim(),
+        username: username.trim(),
         password: hashedPassword,
-        firstName,
-        lastName,
+        firstName: sanitizedFirstName,
+        lastName: sanitizedLastName,
       },
       select: {
         id: true,
@@ -66,19 +95,30 @@ export async function POST(request: NextRequest) {
         lastName: true,
         bio: true,
         avatar: true,
+        role: true,
         createdAt: true,
       },
     });
 
-    // Générer le token JWT
+    // Générer le token JWT sécurisé
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error('JWT_SECRET not configured');
     }
 
-    const token = jwt.sign({ userId: user.id }, jwtSecret, {
-      expiresIn: '30d',
-    });
+    const token = jwt.sign(
+      { userId: user.id }, 
+      jwtSecret, 
+      {
+        expiresIn: '30d',
+        algorithm: 'HS256',
+        issuer: 'paginea-api',
+        audience: 'paginea-app',
+      }
+    );
+
+    // Inscription réussie : réinitialiser le rate limit
+    rateLimiter.reset(`register:${clientIp}`);
 
     return NextResponse.json({ user, token }, { status: 201 });
   } catch (error: any) {

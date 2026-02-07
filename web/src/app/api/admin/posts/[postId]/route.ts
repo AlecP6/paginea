@@ -34,6 +34,18 @@ export async function DELETE(
 
     const { postId } = params;
 
+    // Vérifier d'abord si le post existe
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return NextResponse.json(
+        { error: 'Post non trouvé ou déjà supprimé' },
+        { status: 404 }
+      );
+    }
+
     await prisma.post.delete({
       where: { id: postId },
     });
@@ -41,6 +53,15 @@ export async function DELETE(
     return NextResponse.json({ message: 'Post supprimé par l\'administrateur' });
   } catch (error: any) {
     console.error('Admin delete post error:', error);
+    
+    // Gestion spécifique pour les erreurs Prisma
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { error: 'Post non trouvé ou déjà supprimé' },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Erreur lors de la suppression du post' },
       { status: 500 }

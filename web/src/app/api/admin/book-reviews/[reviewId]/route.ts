@@ -34,6 +34,18 @@ export async function DELETE(
 
     const { reviewId } = params;
 
+    // Vérifier d'abord si la critique existe
+    const review = await prisma.bookReview.findUnique({
+      where: { id: reviewId },
+    });
+
+    if (!review) {
+      return NextResponse.json(
+        { error: 'Critique non trouvée ou déjà supprimée' },
+        { status: 404 }
+      );
+    }
+
     await prisma.bookReview.delete({
       where: { id: reviewId },
     });
@@ -41,6 +53,15 @@ export async function DELETE(
     return NextResponse.json({ message: 'Critique supprimée par l\'administrateur' });
   } catch (error: any) {
     console.error('Admin delete review error:', error);
+    
+    // Gestion spécifique pour les erreurs Prisma
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { error: 'Critique non trouvée ou déjà supprimée' },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Erreur lors de la suppression de la critique' },
       { status: 500 }
