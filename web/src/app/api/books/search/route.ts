@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import axios from 'axios';
 
+// ⚡ IMPORTANT: Forcer Node.js Runtime (axios ne fonctionne pas dans Edge Runtime)
+export const runtime = 'nodejs';
+
 const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes';
 
 export async function GET(request: NextRequest) {
