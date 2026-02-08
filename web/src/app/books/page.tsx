@@ -32,6 +32,8 @@ export default function BooksPage() {
     rating: 0, // 0 = pas de note
     review: '',
     status: 'READ',
+    startedAt: '',
+    finishedAt: '',
   });
 
   useEffect(() => {
@@ -172,6 +174,8 @@ export default function BooksPage() {
       rating: 0,
       review: '',
       status: 'READ',
+      startedAt: '',
+      finishedAt: '',
     });
     setSelectedCoverFile(null);
     setCoverPreview(null);
@@ -277,6 +281,8 @@ export default function BooksPage() {
       rating: review.rating ? review.rating / 2 : 0, // Convertir de /10 à /5, ou 0 si pas de note
       review: review.review || '',
       status: review.status,
+      startedAt: review.startedAt ? new Date(review.startedAt).toISOString().split('T')[0] : '',
+      finishedAt: review.finishedAt ? new Date(review.finishedAt).toISOString().split('T')[0] : '',
     });
     
     // Charger la couverture si elle existe
@@ -306,6 +312,8 @@ export default function BooksPage() {
       rating: 0,
       review: '',
       status: 'READ',
+      startedAt: '',
+      finishedAt: '',
     });
     setSelectedCoverFile(null);
     setCoverPreview(null);
@@ -679,6 +687,37 @@ export default function BooksPage() {
                 </select>
               </div>
 
+              {/* Dates de lecture (optionnelles) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    📅 Date de début (facultative)
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.startedAt}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startedAt: e.target.value })
+                    }
+                    className="input-field"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    📅 Date de fin (facultative)
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.finishedAt}
+                    onChange={(e) =>
+                      setFormData({ ...formData, finishedAt: e.target.value })
+                    }
+                    className="input-field"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                   Votre avis
@@ -848,6 +887,24 @@ export default function BooksPage() {
                   <span className="text-gray-600 dark:text-gray-400 italic">Aucune note</span>
                 )}
               </div>
+
+              {/* Dates de lecture */}
+              {(review.startedAt || review.finishedAt) && (
+                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  {review.startedAt && (
+                    <span className="flex items-center gap-1">
+                      <span>📅</span>
+                      <span>Commencé : {new Date(review.startedAt).toLocaleDateString('fr-FR')}</span>
+                    </span>
+                  )}
+                  {review.finishedAt && (
+                    <span className="flex items-center gap-1">
+                      <span>🏁</span>
+                      <span>Terminé : {new Date(review.finishedAt).toLocaleDateString('fr-FR')}</span>
+                    </span>
+                  )}
+                </div>
+              )}
 
               {review.review && (
                 <p className="text-gray-800 dark:text-gray-200 mb-4">
