@@ -139,7 +139,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!rating || rating < 1 || rating > 10) {
+    // Validation de la note (optionnelle maintenant)
+    if (rating !== null && rating !== undefined && (rating < 1 || rating > 10)) {
       return NextResponse.json(
         { error: 'La note doit être entre 1 et 10' },
         { status: 400 }
@@ -152,7 +153,7 @@ export async function POST(request: NextRequest) {
         bookAuthor,
         bookIsbn,
         bookCover,
-        rating: parseInt(rating),
+        rating: rating ? parseInt(rating) : null, // null si pas de note
         review,
         status,
         startedAt: startedAt ? new Date(startedAt) : null,

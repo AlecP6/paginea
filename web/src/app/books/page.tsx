@@ -215,9 +215,14 @@ export default function BooksPage() {
         
         // Upload cover image if selected
         if (selectedCoverFile) {
-          const coverFormData = new FormData();
-          coverFormData.append('cover', selectedCoverFile);
-          await bookReviewApi.uploadBookCover(editingReviewId, coverFormData);
+          try {
+            const coverFormData = new FormData();
+            coverFormData.append('cover', selectedCoverFile);
+            await bookReviewApi.uploadBookCover(editingReviewId, coverFormData);
+          } catch (coverError) {
+            console.error('Erreur upload couverture:', coverError);
+            // Continue même si l'upload de la couverture échoue
+          }
         }
         
         toast.success('Critique modifiée !');
@@ -228,9 +233,14 @@ export default function BooksPage() {
 
         // Upload cover image if selected
         if (selectedCoverFile && createdReview.id) {
-          const coverFormData = new FormData();
-          coverFormData.append('cover', selectedCoverFile);
-          await bookReviewApi.uploadBookCover(createdReview.id, coverFormData);
+          try {
+            const coverFormData = new FormData();
+            coverFormData.append('cover', selectedCoverFile);
+            await bookReviewApi.uploadBookCover(createdReview.id, coverFormData);
+          } catch (coverError) {
+            console.error('Erreur upload couverture:', coverError);
+            // Continue même si l'upload de la couverture échoue
+          }
         }
         
         toast.success('Critique publiée !');
@@ -242,7 +252,7 @@ export default function BooksPage() {
       setFormData({
         bookTitle: '',
         bookAuthor: '',
-        rating: 5,
+        rating: 0, // Reset à 0 (pas de note)
         review: '',
         status: 'READ',
       });
@@ -252,8 +262,10 @@ export default function BooksPage() {
       setSearchQuery('');
       setSearchResults([]);
       fetchReviews();
-    } catch (error) {
-      toast.error(editingReviewId ? 'Erreur lors de la modification' : 'Erreur lors de la publication');
+    } catch (error: any) {
+      console.error('Erreur soumission:', error);
+      const errorMessage = error.response?.data?.error || (editingReviewId ? 'Erreur lors de la modification' : 'Erreur lors de la publication');
+      toast.error(errorMessage);
     }
   };
 

@@ -100,7 +100,7 @@ export async function PUT(
         ...(bookAuthor && { bookAuthor }),
         ...(bookIsbn !== undefined && { bookIsbn }),
         ...(bookCover !== undefined && { bookCover }),
-        ...(rating && { rating: parseInt(rating) }),
+        ...(rating !== undefined && { rating: rating ? parseInt(rating) : null }), // Gérer rating null
         ...(review !== undefined && { review }),
         ...(status && { status }),
       },
