@@ -399,59 +399,37 @@ body::before {
   }
 }
 
-/* Force le mode sombre sur tous les éléments */
+/* Mode sombre intelligent - cible uniquement le contenu principal */
 @layer base {
-  * {
-    border-color: rgb(55 65 81 / 0.5);
+  /* Inputs et formulaires dans le body principal */
+  body input:not([type="checkbox"]):not([type="radio"]), 
+  body textarea, 
+  body select {
+    background-color: rgba(31, 41, 55, 0.8);
+    color: rgb(243 244 246);
+    border-color: rgba(75, 85, 99, 0.4);
   }
   
-  /* Force les couleurs de texte */
-  h1, h2, h3, h4, h5, h6, p, span, div, label, a {
-    color: rgb(243 244 246) !important;
+  body input::placeholder, 
+  body textarea::placeholder {
+    color: rgb(156 163 175);
   }
   
-  /* Force les backgrounds sombres */
-  input, textarea, select {
-    background-color: rgba(31, 41, 55, 0.8) !important;
-    color: rgb(243 244 246) !important;
-    border-color: rgba(75, 85, 99, 0.4) !important;
-  }
-  
-  input::placeholder, textarea::placeholder {
-    color: rgb(156 163 175) !important;
-  }
-  
-  /* Boutons et éléments interactifs */
-  button {
+  /* Titres et textes dans le main content (mais pas dans les toasts, modals, etc.) */
+  main h1, main h2, main h3, main h4, main h5, main h6 {
     color: rgb(243 244 246);
   }
   
-  /* Cards et containers */
-  [class*="bg-white"] {
-    background-color: rgba(31, 41, 55, 0.9) !important;
+  /* Texte par défaut dans le body - SANS !important pour permettre les overrides */
+  body {
+    color: rgb(243 244 246);
   }
   
-  [class*="bg-gray-50"] {
-    background-color: rgba(55, 65, 81, 0.5) !important;
-  }
-  
-  [class*="bg-gray-100"] {
-    background-color: rgba(55, 65, 81, 0.6) !important;
-  }
-  
-  [class*="text-gray-900"] {
-    color: rgb(243 244 246) !important;
-  }
-  
-  [class*="text-gray-800"] {
-    color: rgb(229 231 235) !important;
-  }
-  
-  [class*="text-gray-700"] {
-    color: rgb(209 213 219) !important;
-  }
-  
-  [class*="text-gray-600"] {
-    color: rgb(156 163 175) !important;
+  /* Les éléments avec classes spécifiques gardent leur couleur */
+  [class*="toast"],
+  [role="status"],
+  [role="alert"],
+  .Toaster {
+    color: inherit !important;
   }
 }
