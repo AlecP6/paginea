@@ -5,9 +5,9 @@
  */
 
 // 🔑 ID Partenaire Amazon
-// À remplacer par votre véritable ID après inscription au Programme Partenaires Amazon
+// Configuré avec l'ID du Programme Partenaires Amazon
 // Inscription : https://partenaires.amazon.fr
-export const AMAZON_AFFILIATE_ID = 'votreid-21'; // TODO: Remplacer par votre ID réel
+export const AMAZON_AFFILIATE_ID = 'pagineaxsanta-21'; // ✅ Configuré
 
 /**
  * Nettoie un titre de livre pour la recherche Amazon
