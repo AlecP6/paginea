@@ -107,8 +107,9 @@ export function getAmazonLinkFromReview(review: {
  */
 export const ADSENSE_CONFIG = {
   // Client ID Google AdSense
-  // À obtenir sur : https://www.google.com/adsense
-  clientId: 'ca-pub-XXXXXXXXXXXXXXXXX', // TODO: Remplacer par votre client ID
+  // Configuré avec l'ID du compte AdSense
+  // Dashboard : https://www.google.com/adsense
+  clientId: 'ca-pub-9705213079025649', // ✅ Configuré
   
   // Formats de pubs recommandés
   formats: {
