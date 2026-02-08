@@ -78,16 +78,10 @@ export default function RootLayout({
       <head>
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
-        {/* Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9705213079025649"
-          crossOrigin="anonymous"
-        />
-      </head>
         <meta name="theme-color" content="#065f46" />
         <link rel="icon" href="/logo.png" />
+        
+        {/* Google AdSense */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9705213079025649"
