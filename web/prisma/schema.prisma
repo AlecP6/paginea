@@ -8,24 +8,28 @@ datasource db {
 }
 
 model User {
-  id               String       @id @default(uuid())
-  email            String       @unique
-  username         String       @unique
+  id               String         @id @default(uuid())
+  email            String         @unique
+  username         String         @unique
   password         String
   firstName        String?
   lastName         String?
   bio              String?
   avatar           String?
-  role             UserRole     @default(USER)
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  role             UserRole       @default(USER)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
   bookReviews      BookReview[]
   comments         Comment[]
-  friendsInitiated Friendship[] @relation("FriendshipInitiator")
-  friendsReceived  Friendship[] @relation("FriendshipReceiver")
+  friendsInitiated Friendship[]   @relation("FriendshipInitiator")
+  friendsReceived  Friendship[]   @relation("FriendshipReceiver")
   likes            Like[]
   posts            Post[]
   reports          Report[]
+  sentMessages     Message[]      @relation("MessageSender")
+  receivedMessages Message[]      @relation("MessageReceiver")
+  conversations1   Conversation[] @relation("ConversationUser1")
+  conversations2   Conversation[] @relation("ConversationUser2")
 
   @@map("users")
 }
@@ -160,4 +164,34 @@ model Report {
   bookReview    BookReview?   @relation(fields: [bookReviewId], references: [id], onDelete: Cascade)
 
   @@map("reports")
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user1Id   String
+  user2Id   String
+  user1     User      @relation("ConversationUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User      @relation("ConversationUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@unique([user1Id, user2Id])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  content        String
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  senderId       String
+  receiverId     String
+  conversationId String
+  sender         User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver       User         @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
 }

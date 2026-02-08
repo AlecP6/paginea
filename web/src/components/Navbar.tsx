@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { useState, useRef, useEffect } from 'react';
-import { BookOpen, PenLine, Users, BookMarked, LogOut, User, ChevronDown, Store, Menu, X, Shield } from 'lucide-react';
+import { BookOpen, PenLine, Users, BookMarked, LogOut, User, ChevronDown, Store, Menu, X, Shield, MessageCircle } from 'lucide-react';
 
 export default function Navbar() {
   const router = useRouter();
@@ -98,6 +98,14 @@ export default function Navbar() {
               >
                 <BookMarked className="w-5 h-5" />
                 <span>Mes Livres</span>
+              </button>
+
+              <button
+                onClick={() => router.push('/messages')}
+                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>Messages</span>
               </button>
 
               <button
@@ -201,6 +209,17 @@ export default function Navbar() {
               >
                 <BookMarked className="w-5 h-5" />
                 <span>Mes Livres</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  router.push('/messages');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>Messages</span>
               </button>
 
               <button

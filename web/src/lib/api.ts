@@ -113,5 +113,17 @@ export const adminApi = {
   deleteBookReview: (reviewId: string) => api.delete(`/admin/book-reviews/${reviewId}`),
 };
 
+// Messages & Conversations
+export const messageApi = {
+  // Conversations
+  getConversations: () => api.get('/conversations'),
+  createConversation: (friendId: string) => api.post('/conversations', { friendId }),
+  
+  // Messages
+  getMessages: (conversationId: string) => api.get(`/conversations/${conversationId}/messages`),
+  sendMessage: (conversationId: string, content: string) => 
+    api.post(`/conversations/${conversationId}/messages`, { content }),
+};
+
 export default api;
 
