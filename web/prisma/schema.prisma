@@ -69,7 +69,7 @@ model BookReview {
   bookAuthor String
   bookIsbn   String?
   bookCover  String?
-  rating     Int
+  rating     Int?
   review     String?
   status     ReadingStatus @default(READ)
   startedAt  DateTime?

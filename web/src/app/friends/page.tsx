@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import { friendshipApi, userApi } from '@/lib/api';
-import { Users, UserPlus, Search, Check, X } from 'lucide-react';
+import { Users, UserPlus, Search, Check, X, UserMinus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function FriendsPage() {
@@ -87,6 +87,20 @@ export default function FriendsPage() {
       fetchRequests();
     } catch (error) {
       toast.error('Erreur lors de la réponse');
+    }
+  };
+
+  const handleRemoveFriend = async (friendshipId: string, username: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir retirer ${username} de vos amis ?`)) {
+      return;
+    }
+
+    try {
+      await friendshipApi.removeFriend(friendshipId);
+      toast.success('Ami retiré');
+      fetchFriends();
+    } catch (error) {
+      toast.error('Erreur lors de la suppression');
     }
   };
 
@@ -223,24 +237,35 @@ export default function FriendsPage() {
             {friends.map((friend) => (
               <div
                 key={friend.id}
-                className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:shadow-md transition-shadow group"
               >
-                {friend.avatar ? (
-                  <img
-                    src={friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`}
-                    alt={friend.username}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    {friend.username[0].toUpperCase()}
+                <div className="flex items-center space-x-3">
+                  {friend.avatar ? (
+                    <img
+                      src={friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`}
+                      alt={friend.username}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      {friend.username[0].toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-semibold dark:text-white">
+                      {friend.username}
+                    </p>
                   </div>
-                )}
-                <div>
-                  <p className="font-semibold dark:text-white">
-                    {friend.username}
-                  </p>
                 </div>
+                
+                {/* Bouton supprimer */}
+                <button
+                  onClick={() => handleRemoveFriend(friend.friendshipId, friend.username)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg"
+                  title="Retirer de mes amis"
+                >
+                  <UserMinus className="w-4 h-4" />
+                </button>
               </div>
             ))}
 

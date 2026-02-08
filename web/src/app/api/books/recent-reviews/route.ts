@@ -54,8 +54,8 @@ export async function GET(request: NextRequest) {
           author: review.bookAuthor,
           coverImage: bookCover,
           isbn: review.bookIsbn || '',
-          rating: review.rating,
-          starRating: review.rating / 2, // Convertir de /10 à /5
+          rating: review.rating || 0,
+          starRating: review.rating ? review.rating / 2 : 0, // Convertir de /10 à /5, ou 0 si pas de note
           review: review.review || '',
           status: review.status,
           publishedBy: review.author.username,

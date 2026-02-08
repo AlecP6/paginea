@@ -98,7 +98,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" className="dark">
       <head>
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

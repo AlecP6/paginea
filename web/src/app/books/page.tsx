@@ -29,7 +29,7 @@ export default function BooksPage() {
   const [formData, setFormData] = useState({
     bookTitle: '',
     bookAuthor: '',
-    rating: 5,
+    rating: 0, // 0 = pas de note
     review: '',
     status: 'READ',
   });
@@ -169,7 +169,7 @@ export default function BooksPage() {
     setFormData({
       bookTitle: '',
       bookAuthor: '',
-      rating: 5,
+      rating: 0,
       review: '',
       status: 'READ',
     });
@@ -203,10 +203,10 @@ export default function BooksPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Convertir la note de /5 à /10 pour le backend
+      // Convertir la note de /5 à /10 pour le backend (si une note est donnée)
       const reviewData = {
         ...formData,
-        rating: formData.rating * 2, // Multiplier par 2 pour convertir de /5 à /10
+        rating: formData.rating > 0 ? formData.rating * 2 : null, // null si pas de note
       };
 
       if (editingReviewId) {
@@ -262,7 +262,7 @@ export default function BooksPage() {
     setFormData({
       bookTitle: review.bookTitle,
       bookAuthor: review.bookAuthor,
-      rating: review.rating / 2, // Convertir de /10 à /5
+      rating: review.rating ? review.rating / 2 : 0, // Convertir de /10 à /5, ou 0 si pas de note
       review: review.review || '',
       status: review.status,
     });
@@ -291,7 +291,7 @@ export default function BooksPage() {
     setFormData({
       bookTitle: '',
       bookAuthor: '',
-      rating: 5,
+      rating: 0,
       review: '',
       status: 'READ',
     });
@@ -615,9 +615,9 @@ export default function BooksPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-                  Note *
+                  Note (facultative)
                 </label>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 mb-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
@@ -635,9 +635,18 @@ export default function BooksPage() {
                     </button>
                   ))}
                   <span className="text-lg font-semibold dark:text-white ml-2">
-                    {formData.rating}/5
+                    {formData.rating > 0 ? `${formData.rating}/5` : 'Aucune note'}
                   </span>
                 </div>
+                {formData.rating > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, rating: 0 })}
+                    className="text-sm text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                  >
+                    ✕ Retirer la note
+                  </button>
+                )}
               </div>
 
               <div>
@@ -804,22 +813,28 @@ export default function BooksPage() {
                   </p>
 
               <div className="flex items-center space-x-2 mb-3">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => {
-                    const starRating = review.rating / 2; // Convertir de /10 à /5
-                    return (
-                      <Star
-                        key={star}
-                        className={`w-5 h-5 ${
-                          star <= starRating
-                            ? 'text-yellow-500 fill-yellow-500'
-                            : 'text-gray-400 dark:text-gray-600'
-                        }`}
-                      />
-                    );
-                  })}
-                </div>
-                <span className="font-bold dark:text-white">{review.rating / 2}/5</span>
+                {review.rating ? (
+                  <>
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => {
+                        const starRating = review.rating / 2; // Convertir de /10 à /5
+                        return (
+                          <Star
+                            key={star}
+                            className={`w-5 h-5 ${
+                              star <= starRating
+                                ? 'text-yellow-500 fill-yellow-500'
+                                : 'text-gray-400 dark:text-gray-600'
+                            }`}
+                          />
+                        );
+                      })}
+                    </div>
+                    <span className="font-bold dark:text-white">{review.rating / 2}/5</span>
+                  </>
+                ) : (
+                  <span className="text-gray-600 dark:text-gray-400 italic">Aucune note</span>
+                )}
               </div>
 
               {review.review && (

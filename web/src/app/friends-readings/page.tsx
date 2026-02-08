@@ -132,22 +132,28 @@ export default function FriendsReadingsPage() {
 
                 {/* Note */}
                 <div className="flex items-center space-x-2 mb-3">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => {
-                      const starRating = review.rating / 2; // Convertir de /10 à /5
-                      return (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= starRating
-                              ? 'text-yellow-500 fill-yellow-500'
-                              : 'text-white'
-                          }`}
-                        />
-                      );
-                    })}
-                  </div>
-                  <span className="font-bold dark:text-white">{review.rating / 2}/5</span>
+                  {review.rating ? (
+                    <>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          const starRating = review.rating / 2; // Convertir de /10 à /5
+                          return (
+                            <Star
+                              key={star}
+                              className={`w-4 h-4 ${
+                                star <= starRating
+                                  ? 'text-yellow-500 fill-yellow-500'
+                                  : 'text-white'
+                              }`}
+                            />
+                          );
+                        })}
+                      </div>
+                      <span className="font-bold dark:text-white">{review.rating / 2}/5</span>
+                    </>
+                  ) : (
+                    <span className="text-gray-400 italic text-sm">Aucune note</span>
+                  )}
                 </div>
 
                 {/* Badge statut */}

@@ -143,15 +143,16 @@ export default function BookstorePage() {
                   {/* Note et infos */}
                   <div className="mb-3 space-y-2">
                     {/* Étoiles */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(book.starRating)
-                                ? 'text-yellow-400 fill-yellow-400'
-                                : i < book.starRating
+                    {book.starRating > 0 ? (
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < Math.floor(book.starRating)
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : i < book.starRating
                                 ? 'text-yellow-400 fill-yellow-400'
                                 : 'text-white'
                             }`}
@@ -162,6 +163,11 @@ export default function BookstorePage() {
                         {book.starRating.toFixed(1)}
                       </span>
                     </div>
+                    ) : (
+                      <div className="text-sm text-gray-400 italic">
+                        Aucune note
+                      </div>
+                    )}
                     
                     {/* Publié par */}
                     <div className="flex items-center gap-2">
