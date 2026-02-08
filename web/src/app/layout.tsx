@@ -126,7 +126,51 @@ export default function RootLayout({
       <body className={`${inter.className} ${dancingScript.variable}`}>
         <StructuredData type="WebSite" />
         {children}
-        <Toaster position="top-right" />
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            // Style par défaut pour tous les toasts
+            style: {
+              background: '#ffffff',
+              color: '#000000',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              fontWeight: '500',
+            },
+            // Style pour les toasts de succès
+            success: {
+              style: {
+                background: '#ffffff',
+                color: '#000000',
+              },
+              iconTheme: {
+                primary: '#22c55e',
+                secondary: '#ffffff',
+              },
+            },
+            // Style pour les toasts d'erreur
+            error: {
+              style: {
+                background: '#ffffff',
+                color: '#000000',
+              },
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#ffffff',
+              },
+            },
+            // Style pour les toasts de chargement
+            loading: {
+              style: {
+                background: '#ffffff',
+                color: '#000000',
+              },
+            },
+            // Durée d'affichage
+            duration: 4000,
+          }}
+        />
       </body>
     </html>
   )
