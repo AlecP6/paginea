@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import SEOHead from '@/components/SEOHead';
 import AdSense from '@/components/AdSense';
+import { getAmazonLinkFromBook, ADSENSE_CONFIG } from '@/lib/monetization';
 import { booksApi } from '@/lib/api';
 import { BookOpen, ExternalLink, ShoppingCart, Star, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -30,33 +31,6 @@ export default function BookstorePage() {
   const { isAuthenticated, loadUser } = useAuthStore();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // ID Partenaire Amazon - À remplacer par votre propre ID après inscription
-  const AMAZON_AFFILIATE_ID = 'votreid-21';
-
-  // Fonction pour générer un lien Amazon avec affiliation optimisé
-  const getAmazonLink = (book: Book) => {
-    // Nettoyer le titre (enlever sous-titres après : ou -)
-    const cleanTitle = book.title
-      .split(':')[0]
-      .split('-')[0]
-      .trim()
-      .replace(/[^\w\s]/g, '') // Enlever caractères spéciaux
-      .replace(/\s+/g, '+');
-    
-    // Nettoyer l'auteur
-    const cleanAuthor = book.author
-      .trim()
-      .replace(/[^\w\s]/g, '')
-      .replace(/\s+/g, '+');
-    
-    // Recherche optimisée par titre + auteur + "livre" pour de meilleurs résultats
-    const searchQuery = `${cleanTitle}+${cleanAuthor}+livre`;
-    
-    // Toujours utiliser la recherche (plus fiable que l'ISBN direct)
-    // avec filtre sur la catégorie Livres
-    return `https://www.amazon.fr/s?k=${searchQuery}&i=stripbooks&tag=${AMAZON_AFFILIATE_ID}`;
-  };
 
   useEffect(() => {
     loadUser();
@@ -219,9 +193,9 @@ export default function BookstorePage() {
 
                   {/* Bouton Trouver sur Amazon */}
                   <a
-                    href={getAmazonLink(book)}
+                    href={getAmazonLinkFromBook(book)}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer sponsored"
                     className="mt-3 w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
                   >
                     <ShoppingCart className="w-4 h-4" />

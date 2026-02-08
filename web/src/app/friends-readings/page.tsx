@@ -9,39 +9,13 @@ import { bookReviewApi } from '@/lib/api';
 import { Star, Heart, MessageSquare, User as UserIcon, ShoppingCart } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import { getAmazonLinkFromReview } from '@/lib/monetization';
 
 export default function FriendsReadingsPage() {
   const router = useRouter();
   const { isAuthenticated, loadUser, user } = useAuthStore();
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  // ID Partenaire Amazon - À remplacer par votre propre ID après inscription
-  const AMAZON_AFFILIATE_ID = 'votreid-21';
-
-  // Fonction pour générer un lien Amazon avec affiliation optimisé
-  const getAmazonLink = (review: any) => {
-    // Nettoyer le titre (enlever sous-titres après : ou -)
-    const cleanTitle = review.bookTitle
-      .split(':')[0]
-      .split('-')[0]
-      .trim()
-      .replace(/[^\w\s]/g, '') // Enlever caractères spéciaux
-      .replace(/\s+/g, '+');
-    
-    // Nettoyer l'auteur
-    const cleanAuthor = review.bookAuthor
-      .trim()
-      .replace(/[^\w\s]/g, '')
-      .replace(/\s+/g, '+');
-    
-    // Recherche optimisée par titre + auteur + "livre" pour de meilleurs résultats
-    const searchQuery = `${cleanTitle}+${cleanAuthor}+livre`;
-    
-    // Toujours utiliser la recherche (plus fiable que l'ISBN direct)
-    // avec filtre sur la catégorie Livres
-    return `https://www.amazon.fr/s?k=${searchQuery}&i=stripbooks&tag=${AMAZON_AFFILIATE_ID}`;
-  };
 
   useEffect(() => {
     loadUser();
@@ -204,7 +178,7 @@ export default function FriendsReadingsPage() {
                 {/* Bouton Amazon */}
                 <div className="mb-4">
                   <a
-                    href={getAmazonLink(review)}
+                    href={getAmazonLinkFromReview(review)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
