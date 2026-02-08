@@ -440,10 +440,10 @@ export default function BooksPage() {
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Recherche Google Books */}
+              {/* Recherche dans la librairie */}
               <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg border-2 border-primary-200 dark:border-primary-700">
                 <label className="block text-sm font-medium text-primary-900 dark:text-primary-100 mb-2">
-                  🔍 Rechercher dans Google Books
+                  🔍 Rechercher dans la librairie
                 </label>
                 <div className="relative flex gap-2">
                   <input
