@@ -259,6 +259,8 @@ export default function BooksPage() {
         rating: 0, // Reset à 0 (pas de note)
         review: '',
         status: 'READ',
+        startedAt: '',
+        finishedAt: '',
       });
       setSelectedCoverFile(null);
       setCoverPreview(null);
