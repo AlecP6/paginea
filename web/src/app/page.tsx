@@ -77,13 +77,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 animate-fadeIn" style={{ animationDelay: '0.6s', opacity: 0, animationFillMode: 'forwards' }}>
               <button
                 onClick={() => router.push('/register')}
-                className="group relative bg-gradient-to-r from-white to-gray-50 text-primary-700 font-bold text-lg px-10 py-4 rounded-2xl shadow-2xl 
+                className="group relative bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold text-lg px-10 py-4 rounded-2xl 
+                         border-2 border-white/30 hover:border-white/50 shadow-2xl 
                          transition-all duration-300 transform hover:scale-105 hover:shadow-green-400/50
                          active:scale-95 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <span className="relative flex items-center justify-center space-x-2">
-                  <span>Rejoindre la communauté</span>
+                  <span className="group-hover:tracking-wider transition-all duration-300">Rejoindre la communauté</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
                 </span>
               </button>
