@@ -1,0 +1,28 @@
+{
+  "name": "Paginea - Réseau Social Littéraire",
+  "short_name": "Paginea",
+  "description": "Partagez vos lectures, découvrez de nouveaux livres et échangez avec une communauté passionnée de lecteurs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#065f46",
+  "theme_color": "#065f46",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["social", "books", "education"],
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "scope": "/"
+}

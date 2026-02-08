@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "prisma generate && prisma migrate deploy && next build",
+    "build:safe": "prisma generate && node scripts/migrate-messaging.js && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "create-admin": "tsx scripts/create-admin.ts",
-    "prisma:migrate": "prisma migrate deploy"
+    "prisma:migrate": "prisma migrate deploy",
+    "migrate:messaging": "node scripts/migrate-messaging.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",

@@ -11,45 +11,61 @@ const dancingScript = Dancing_Script({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.paginea.fr'),
   title: {
-    default: 'Paginea - Réseau Social de Lecture',
+    default: 'Paginea - Réseau Social Littéraire | Partagez vos Lectures',
     template: '%s | Paginea'
   },
-  description: 'Partagez vos lectures, vos avis et découvrez de nouveaux livres avec vos amis. Rejoignez la communauté de lecteurs passionnés sur Paginea.',
-  keywords: ['livres', 'lecture', 'réseau social', 'critiques livres', 'avis livres', 'bibliothèque', 'lecteurs', 'recommandations livres', 'Paginea'],
-  authors: [{ name: 'Santa' }],
-  creator: 'Santa',
+  description: 'Rejoignez Paginea, le réseau social dédié aux passionnés de lecture. Partagez vos avis, découvrez de nouveaux livres, échangez avec des lecteurs et créez votre bibliothèque virtuelle.',
+  keywords: [
+    'réseau social littéraire',
+    'communauté de lecteurs',
+    'partage de lecture',
+    'critiques de livres',
+    'recommandations de livres',
+    'bibliothèque virtuelle',
+    'avis sur les livres',
+    'découverte littéraire',
+    'club de lecture en ligne',
+    'paginea',
+    'réseau social livres',
+    'communauté littéraire',
+    'lectures partagées',
+  ],
+  authors: [{ name: 'Paginea' }],
+  creator: 'Paginea',
   publisher: 'Paginea',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: '/',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.paginea.fr',
     siteName: 'Paginea',
-    title: 'Paginea - Réseau Social de Lecture',
-    description: 'Partagez vos lectures, vos avis et découvrez de nouveaux livres avec vos amis. Rejoignez la communauté de lecteurs passionnés.',
+    title: 'Paginea - Réseau Social Littéraire',
+    description: 'Partagez vos lectures, découvrez de nouveaux livres et échangez avec une communauté passionnée de lecteurs.',
     images: [
       {
         url: '/logo.png',
         width: 1200,
         height: 630,
-        alt: 'Logo Paginea',
+        alt: 'Logo Paginea - Réseau Social Littéraire',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Paginea - Réseau Social de Lecture',
-    description: 'Partagez vos lectures, vos avis et découvrez de nouveaux livres avec vos amis.',
+    title: 'Paginea - Réseau Social Littéraire',
+    description: 'Partagez vos lectures, découvrez de nouveaux livres et échangez avec une communauté passionnée de lecteurs.',
     images: ['/logo.png'],
+    creator: '@paginea',
+    site: '@paginea',
   },
   robots: {
     index: true,
@@ -62,10 +78,18 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    // google: 'votre-code-verification-google',
-    // yandex: 'votre-code-verification-yandex',
+  category: 'Social Network',
+  applicationName: 'Paginea',
+  appleWebApp: {
+    capable: true,
+    title: 'Paginea',
+    statusBarStyle: 'black-translucent',
   },
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
