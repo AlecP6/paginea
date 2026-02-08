@@ -890,19 +890,19 @@ export default function BooksPage() {
                 )}
               </div>
 
-              {/* Dates de lecture */}
+              {/* Dates de lecture - sous la note */}
               {(review.startedAt || review.finishedAt) && (
-                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mb-4 ml-1">
                   {review.startedAt && (
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1.5">
                       <span>📅</span>
-                      <span>Commencé : {new Date(review.startedAt).toLocaleDateString('fr-FR')}</span>
+                      <span>Commencé le {new Date(review.startedAt).toLocaleDateString('fr-FR')}</span>
                     </span>
                   )}
                   {review.finishedAt && (
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1.5">
                       <span>🏁</span>
-                      <span>Terminé : {new Date(review.finishedAt).toLocaleDateString('fr-FR')}</span>
+                      <span>Terminé le {new Date(review.finishedAt).toLocaleDateString('fr-FR')}</span>
                     </span>
                   )}
                 </div>
