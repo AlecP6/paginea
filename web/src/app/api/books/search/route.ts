@@ -1,11 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
-import axios from 'axios';
 
-// ⚡ IMPORTANT: Forcer Node.js Runtime (axios ne fonctionne pas dans Edge Runtime)
+// ⚡ IMPORTANT: Forcer Node.js Runtime
 export const runtime = 'nodejs';
 
-const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes';
+// 🆕 OPEN LIBRARY API - Gratuit, sans quota, fiable
+const OPEN_LIBRARY_SEARCH_API = 'https://openlibrary.org/search.json';
+const OPEN_LIBRARY_COVERS_API = 'https://covers.openlibrary.org/b';
+
+/**
+ * Récupère l'URL de couverture depuis Open Library
+ */
+function getCoverUrl(coverId: number | null, size: 'S' | 'M' | 'L' = 'M'): string {
+  if (!coverId) return '';
+  return `${OPEN_LIBRARY_COVERS_API}/id/${coverId}-${size}.jpg`;
+}
+
+/**
+ * Extrait le premier ISBN-13 ou ISBN-10 disponible
+ */
+function extractISBN(isbns: string[] | undefined): string {
+  if (!isbns || isbns.length === 0) return '';
+  
+  // Préférer ISBN-13 (commence par 978 ou 979)
+  const isbn13 = isbns.find(isbn => isbn.length === 13 && (isbn.startsWith('978') || isbn.startsWith('979')));
+  if (isbn13) return isbn13;
+  
+  // Sinon prendre ISBN-10
+  const isbn10 = isbns.find(isbn => isbn.length === 10);
+  if (isbn10) return isbn10;
+  
+  // Sinon le premier disponible
+  return isbns[0] || '';
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,120 +53,97 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log(`🔍 [API] Recherche Google Books pour: "${query}"`);
+    console.log(`🔍 [API] Recherche Open Library pour: "${query}"`);
 
-    // Préparer les paramètres
-    const params: any = {
-      q: query,
-      maxResults: 10,
-      printType: 'books',
-      langRestrict: 'fr',
-    };
+    // Appel à Open Library API
+    const url = new URL(OPEN_LIBRARY_SEARCH_API);
+    url.searchParams.set('q', query);
+    url.searchParams.set('limit', '15');
+    url.searchParams.set('fields', 'key,title,author_name,first_publish_year,publisher,isbn,cover_i,language,number_of_pages_median,subject');
+    url.searchParams.set('lang', 'fr');
 
-    // Ajouter la clé API si disponible
-    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-    if (apiKey) {
-      params.key = apiKey;
-      console.log('🔑 [API] Utilisation de la clé API Google Books');
-    } else {
-      console.log('⚠️  [API] Pas de clé API - utilisation sans clé');
-    }
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 secondes
 
-    // Appel à Google Books API avec axios
-    const response = await axios.get(GOOGLE_BOOKS_API, {
-      params,
-      timeout: 8000, // 8 secondes
+    const response = await fetch(url.toString(), {
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'User-Agent': 'Paginea/1.0 (Reading community platform)',
       },
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     console.log(`📊 [API] Status: ${response.status}`);
 
+    if (!response.ok) {
+      console.error(`❌ [API] Open Library erreur: ${response.status}`);
+      throw new Error(`Open Library API returned ${response.status}`);
+    }
+
+    const data = await response.json();
+
     // Vérifier si des résultats existent
-    if (!response.data || !response.data.items || response.data.items.length === 0) {
+    if (!data || !data.docs || data.docs.length === 0) {
       console.log('📚 [API] Aucun résultat trouvé');
       return NextResponse.json([]);
     }
 
-    console.log(`✅ [API] ${response.data.items.length} livre(s) trouvé(s)`);
+    console.log(`✅ [API] ${data.docs.length} livre(s) trouvé(s)`);
 
-    // Formater les résultats
-    const books = response.data.items.map((item: any) => {
-      const info = item.volumeInfo || {};
-      
-      return {
-        googleBooksId: item.id || '',
-        title: info.title || 'Titre inconnu',
-        authors: info.authors || [],
-        author: (info.authors && info.authors[0]) || 'Auteur inconnu',
-        publisher: info.publisher || '',
-        publishedDate: info.publishedDate || '',
-        description: info.description || '',
-        isbn: 
-          (info.industryIdentifiers?.find((id: any) => id.type === 'ISBN_13')?.identifier) ||
-          (info.industryIdentifiers?.find((id: any) => id.type === 'ISBN_10')?.identifier) ||
-          '',
-        pageCount: info.pageCount || 0,
-        categories: info.categories || [],
-        language: info.language || 'fr',
-        coverImage: 
-          (info.imageLinks?.thumbnail || '').replace('http://', 'https://') ||
-          (info.imageLinks?.smallThumbnail || '').replace('http://', 'https://') ||
-          '',
-        previewLink: info.previewLink || '',
-        infoLink: info.infoLink || '',
-      };
-    });
+    // Formater les résultats pour correspondre au format attendu
+    const books = data.docs
+      .filter((doc: any) => doc.title && doc.author_name) // Filtrer les livres sans titre ou auteur
+      .slice(0, 10) // Limiter à 10 résultats
+      .map((doc: any) => {
+        const isbn = extractISBN(doc.isbn);
+        const coverUrl = getCoverUrl(doc.cover_i, 'M');
+        
+        return {
+          // ID unique (utiliser la clé Open Library)
+          googleBooksId: doc.key || `ol-${doc.cover_i || Math.random()}`,
+          openLibraryKey: doc.key,
+          
+          // Informations de base
+          title: doc.title || 'Titre inconnu',
+          authors: doc.author_name || [],
+          author: (doc.author_name && doc.author_name[0]) || 'Auteur inconnu',
+          
+          // Publication
+          publisher: (doc.publisher && doc.publisher[0]) || '',
+          publishedDate: doc.first_publish_year ? doc.first_publish_year.toString() : '',
+          
+          // Description (Open Library ne fournit pas de description dans search, on met un placeholder)
+          description: doc.subject ? doc.subject.slice(0, 5).join(' • ') : '',
+          
+          // ISBN
+          isbn: isbn,
+          
+          // Détails
+          pageCount: doc.number_of_pages_median || 0,
+          categories: doc.subject ? doc.subject.slice(0, 3) : [],
+          language: (doc.language && doc.language[0]) || 'fr',
+          
+          // Images et liens
+          coverImage: coverUrl,
+          previewLink: doc.key ? `https://openlibrary.org${doc.key}` : '',
+          infoLink: doc.key ? `https://openlibrary.org${doc.key}` : '',
+        };
+      });
 
     return NextResponse.json(books);
 
   } catch (error: any) {
-    console.error('❌ [API] Erreur recherche Google Books:', error.message);
+    console.error('❌ [API] Erreur recherche Open Library:', error.message);
     
-    // Gestion des erreurs spécifiques
-    if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+    // Gestion des timeouts
+    if (error.name === 'AbortError') {
       console.error('⏱️  [API] Timeout de la requête');
       return NextResponse.json(
         { error: 'La recherche a pris trop de temps. Réessayez.' },
         { status: 408 }
-      );
-    }
-    
-    if (error.response) {
-      console.error(`❌ [API] Google Books API erreur: ${error.response.status}`);
-      console.error('❌ [API] Details:', error.response.data);
-      
-      // Gestion spécifique du quota dépassé (429)
-      if (error.response.status === 429) {
-        const errorData = error.response.data?.error;
-        
-        // Vérifier si c'est un dépassement de quota Google
-        if (errorData?.message?.includes('Quota exceeded')) {
-          console.error('📊 [API] Quota Google Books API dépassé !');
-          return NextResponse.json(
-            { 
-              error: '⚠️ Quota journalier Google Books dépassé',
-              message: 'Trop de recherches aujourd\'hui. Réessayez demain ou activez la facturation Google Cloud pour augmenter le quota.',
-              details: 'Le quota se réinitialise à minuit UTC (00:00 GMT)'
-            },
-            { status: 429 }
-          );
-        }
-        
-        // Autres erreurs 429
-        return NextResponse.json(
-          { error: 'Trop de requêtes. Patientez quelques secondes.' },
-          { status: 429 }
-        );
-      }
-      
-      return NextResponse.json(
-        { 
-          error: 'Erreur Google Books API',
-          details: error.response.data,
-        },
-        { status: error.response.status }
       );
     }
     

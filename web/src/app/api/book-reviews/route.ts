@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import axios from 'axios';
-
-const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes';
+import { findBookCover } from '@/lib/bookCovers';
 
 // GET - Obtenir les critiques
 export async function GET(request: NextRequest) {
@@ -64,29 +62,21 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    // Enrichir avec les couvertures Google Books si manquantes
+    // Enrichir avec les couvertures si manquantes
     const enrichedReviews = await Promise.all(
       bookReviews.map(async (review: any) => {
         let bookCover = review.bookCover;
 
         if (!bookCover) {
           try {
-            const searchQuery = `${review.bookTitle} ${review.bookAuthor}`;
-            const googleResponse = await axios.get(GOOGLE_BOOKS_API, {
-              params: {
-                q: searchQuery,
-                maxResults: 1,
-              },
-            });
-
-            if (googleResponse.data.items && googleResponse.data.items.length > 0) {
-              const bookData = googleResponse.data.items[0].volumeInfo;
-              bookCover = bookData.imageLinks?.thumbnail?.replace('http://', 'https://') ||
-                          bookData.imageLinks?.smallThumbnail?.replace('http://', 'https://') ||
-                          '';
+            const result = await findBookCover(review.bookTitle, review.bookIsbn);
+            bookCover = result.coverUrl;
+            
+            if (bookCover) {
+              console.log(`✅ Couverture trouvée via ${result.source} pour: ${review.bookTitle}`);
             }
           } catch (err) {
-            console.log('Impossible de récupérer la couverture depuis Google Books');
+            console.log('❌ Impossible de récupérer la couverture:', err);
           }
         }
 
