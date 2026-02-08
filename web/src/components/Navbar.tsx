@@ -107,6 +107,14 @@ export default function Navbar() {
           <div className="hidden lg:flex flex-1 justify-center">
             <div className="flex items-center space-x-6">
               <button
+                onClick={() => router.push('/bookstore')}
+                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
+              >
+                <Store className="w-5 h-5" />
+                <span>Librairie</span>
+              </button>
+
+              <button
                 onClick={() => router.push('/dashboard')}
                 className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
               >
@@ -123,6 +131,22 @@ export default function Navbar() {
               </button>
 
               <button
+                onClick={() => router.push('/friends')}
+                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
+              >
+                <Users className="w-5 h-5" />
+                <span>Amis</span>
+              </button>
+
+              <button
+                onClick={() => router.push('/friends-readings')}
+                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
+              >
+                <BookOpen className="w-5 h-5" />
+                <span>Lectures Amis</span>
+              </button>
+
+              <button
                 onClick={() => router.push('/messages')}
                 className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors relative"
               >
@@ -135,29 +159,6 @@ export default function Navbar() {
                 )}
               </button>
 
-              <button
-                onClick={() => router.push('/bookstore')}
-                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
-              >
-                <Store className="w-5 h-5" />
-                <span>Librairie</span>
-              </button>
-
-              <button
-                onClick={() => router.push('/friends-readings')}
-                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>Lectures Amis</span>
-              </button>
-
-              <button
-                onClick={() => router.push('/friends')}
-                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
-              >
-                <Users className="w-5 h-5" />
-                <span>Amis</span>
-              </button>
               {user?.role === 'ADMIN' && (
                 <button
                   onClick={() => router.push('/admin')}
@@ -218,6 +219,17 @@ export default function Navbar() {
             <div className="flex flex-col space-y-2">
               <button
                 onClick={() => {
+                  router.push('/bookstore');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg"
+              >
+                <Store className="w-5 h-5" />
+                <span>Librairie</span>
+              </button>
+
+              <button
+                onClick={() => {
                   router.push('/dashboard');
                   setMobileMenuOpen(false);
                 }}
@@ -240,29 +252,13 @@ export default function Navbar() {
 
               <button
                 onClick={() => {
-                  router.push('/messages');
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg relative"
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>Messages</span>
-                {unreadCount > 0 && (
-                  <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              <button
-                onClick={() => {
-                  router.push('/bookstore');
+                  router.push('/friends');
                   setMobileMenuOpen(false);
                 }}
                 className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg"
               >
-                <Store className="w-5 h-5" />
-                <span>Librairie</span>
+                <Users className="w-5 h-5" />
+                <span>Amis</span>
               </button>
 
               <button
@@ -278,13 +274,18 @@ export default function Navbar() {
 
               <button
                 onClick={() => {
-                  router.push('/friends');
+                  router.push('/messages');
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg"
+                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg relative"
               >
-                <Users className="w-5 h-5" />
-                <span>Amis</span>
+                <MessageCircle className="w-5 h-5" />
+                <span>Messages</span>
+                {unreadCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </button>
               {user?.role === 'ADMIN' && (
                 <button
