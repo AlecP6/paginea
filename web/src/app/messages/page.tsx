@@ -132,7 +132,9 @@ export default function MessagesPage() {
 
   const handleCreateConversation = async (friendId: string) => {
     try {
+      console.log('🔍 [Client] Creating conversation with friendId:', friendId);
       const response = await messageApi.createConversation(friendId);
+      console.log('✅ [Client] Conversation created:', response.data);
       setShowNewConversationModal(false);
       fetchConversations();
       // Sélectionner la nouvelle conversation
@@ -146,9 +148,12 @@ export default function MessagesPage() {
       setSelectedConversation(newConv);
       toast.success('Conversation créée !');
     } catch (error: any) {
-      console.error('Error creating conversation:', error);
+      console.error('❌ [Client] Error creating conversation:', error);
+      console.error('❌ [Client] Error response:', error.response?.data);
       if (error.response?.data?.error) {
         toast.error(error.response.data.error);
+      } else if (error.response?.data?.details) {
+        toast.error(`Erreur: ${error.response.data.details}`);
       } else {
         toast.error('Erreur lors de la création de la conversation');
       }

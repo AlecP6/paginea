@@ -104,6 +104,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { friendId } = body;
 
+    console.log('🔍 [Conversation POST] userId:', userId, 'friendId:', friendId);
+
     if (!friendId) {
       return NextResponse.json(
         { error: 'L\'ID de l\'ami est requis' },
@@ -121,6 +123,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('🔍 [Conversation POST] Friendship found:', !!friendship);
+
     if (!friendship) {
       return NextResponse.json(
         { error: 'Vous devez être amis pour démarrer une conversation' },
@@ -130,6 +134,8 @@ export async function POST(request: NextRequest) {
 
     // Vérifier si une conversation existe déjà
     const [user1Id, user2Id] = userId < friendId ? [userId, friendId] : [friendId, userId];
+    
+    console.log('🔍 [Conversation POST] Looking for conversation:', user1Id, user2Id);
     
     let conversation = await prisma.conversation.findUnique({
       where: {
@@ -160,8 +166,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('🔍 [Conversation POST] Existing conversation found:', !!conversation);
+
     // Si la conversation n'existe pas, la créer
     if (!conversation) {
+      console.log('🔍 [Conversation POST] Creating new conversation...');
       conversation = await prisma.conversation.create({
         data: {
           user1Id,
@@ -188,6 +197,7 @@ export async function POST(request: NextRequest) {
           },
         },
       });
+      console.log('✅ [Conversation POST] Conversation created:', conversation.id);
     }
 
     const friend = conversation.user1Id === userId ? conversation.user2 : conversation.user1;
@@ -197,10 +207,14 @@ export async function POST(request: NextRequest) {
       friend,
       createdAt: conversation.createdAt,
     });
-  } catch (error) {
-    console.error('Error creating conversation:', error);
+  } catch (error: any) {
+    console.error('❌ [Conversation POST] Error:', error);
+    console.error('❌ [Conversation POST] Error details:', error.message, error.stack);
     return NextResponse.json(
-      { error: 'Erreur lors de la création de la conversation' },
+      { 
+        error: 'Erreur lors de la création de la conversation',
+        details: error.message 
+      },
       { status: 500 }
     );
   }
