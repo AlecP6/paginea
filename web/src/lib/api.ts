@@ -123,6 +123,7 @@ export const messageApi = {
   getMessages: (conversationId: string) => api.get(`/conversations/${conversationId}/messages`),
   sendMessage: (conversationId: string, content: string) => 
     api.post(`/conversations/${conversationId}/messages`, { content }),
+  deleteMessage: (messageId: string) => api.delete(`/messages/${messageId}`),
 };
 
 export default api;

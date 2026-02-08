@@ -4,14 +4,36 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { useState, useRef, useEffect } from 'react';
 import { BookOpen, PenLine, Users, BookMarked, LogOut, User, ChevronDown, Store, Menu, X, Shield, MessageCircle } from 'lucide-react';
+import { messageApi } from '@/lib/api';
 
 export default function Navbar() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Récupérer le nombre de messages non lus
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+      // Rafraîchir toutes les 10 secondes
+      const interval = setInterval(fetchUnreadCount, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await messageApi.getConversations();
+      const total = response.data.reduce((sum: number, conv: any) => sum + conv.unreadCount, 0);
+      setUnreadCount(total);
+    } catch (error) {
+      // Silencieux, pas besoin d'afficher d'erreur
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -102,10 +124,15 @@ export default function Navbar() {
 
               <button
                 onClick={() => router.push('/messages')}
-                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
+                className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors relative"
               >
                 <MessageCircle className="w-5 h-5" />
                 <span>Messages</span>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </button>
 
               <button
@@ -216,10 +243,15 @@ export default function Navbar() {
                   router.push('/messages');
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg"
+                className="flex items-center space-x-3 px-4 py-3 text-white hover:bg-gray-700 transition-colors rounded-lg relative"
               >
                 <MessageCircle className="w-5 h-5" />
                 <span>Messages</span>
+                {unreadCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </button>
 
               <button
