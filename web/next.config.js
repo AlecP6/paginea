@@ -10,7 +10,12 @@ const nextConfig = {
   },
   // Optimisation des images
   images: {
-    domains: ['localhost', 'books.google.com', 'images.unsplash.com'],
+    domains: [
+      'localhost', 
+      'books.google.com', 
+      'images.unsplash.com',
+      'covers.openlibrary.org', // 🆕 Open Library covers
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,6 +24,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'covers.openlibrary.org', // 🆕 Open Library
+      },
+      {
+        protocol: 'https',
+        hostname: 'openlibrary.org', // 🆕 Open Library (fallback)
       },
       {
         protocol: 'https',
@@ -77,7 +90,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://www.googleapis.com https://books.google.com",
+              "connect-src 'self' https://www.googleapis.com https://books.google.com https://openlibrary.org https://covers.openlibrary.org",
               "frame-src 'self' https://pagead2.googlesyndication.com",
             ].join('; '),
           },

@@ -482,12 +482,19 @@ export default function BooksPage() {
                         onClick={() => handleSelectBook(book)}
                         className="flex items-start space-x-3 p-3 bg-white dark:bg-gray-800 rounded-lg cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors border border-gray-200 dark:border-gray-700"
                       >
-                        {book.coverImage && (
-                          <img
+                        {book.coverImage ? (
+                          <Image
                             src={book.coverImage}
                             alt={book.title}
+                            width={48}
+                            height={64}
                             className="w-12 h-16 object-cover rounded"
+                            unoptimized={book.coverImage.includes('covers.openlibrary.org')}
                           />
+                        ) : (
+                          <div className="w-12 h-16 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                            <BookOpen className="w-6 h-6 text-gray-400" />
+                          </div>
                         )}
                         <div className="flex-1 min-w-0">
                           <h4 className="font-semibold text-gray-900 dark:text-white truncate">
@@ -723,8 +730,10 @@ export default function BooksPage() {
                       className="object-cover rounded-lg shadow-md"
                       sizes="192px"
                       loading="lazy"
+                      unoptimized={review.bookCover.includes('covers.openlibrary.org')}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
+                        console.error(`❌ Erreur chargement image: ${review.bookCover}`);
                       }}
                     />
                   ) : (

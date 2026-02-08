@@ -16,6 +16,35 @@ export interface BookCoverResult {
 }
 
 /**
+ * Vérifie si une URL de couverture Open Library est valide (pas une image placeholder)
+ * Open Library retourne une image 1x1px (~807 bytes) si la couverture n'existe pas
+ */
+async function validateOpenLibraryCover(coverUrl: string): Promise<boolean> {
+  if (!coverUrl) return false;
+  
+  try {
+    const response = await fetch(coverUrl, {
+      method: 'HEAD',
+      signal: AbortSignal.timeout(3000),
+    });
+
+    if (!response.ok) return false;
+
+    // Vérifier la taille de l'image (placeholder Open Library = ~807 bytes)
+    const contentLength = response.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) < 1000) {
+      console.log(`⚠️  Couverture trop petite (${contentLength} bytes) - probablement un placeholder`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('❌ Erreur validation couverture:', error);
+    return false;
+  }
+}
+
+/**
  * Recherche une couverture de livre par titre via Open Library
  */
 export async function searchBookCoverByTitle(title: string): Promise<BookCoverResult> {
@@ -39,10 +68,16 @@ export async function searchBookCoverByTitle(title: string): Promise<BookCoverRe
 
     if (data.docs && data.docs[0]?.cover_i) {
       const coverId = data.docs[0].cover_i;
-      return {
-        coverUrl: `${OPEN_LIBRARY_COVERS_API}/id/${coverId}-M.jpg`,
-        source: 'open-library',
-      };
+      const coverUrl = `${OPEN_LIBRARY_COVERS_API}/id/${coverId}-M.jpg`;
+      
+      // Valider que ce n'est pas un placeholder
+      const isValid = await validateOpenLibraryCover(coverUrl);
+      if (isValid) {
+        return {
+          coverUrl,
+          source: 'open-library',
+        };
+      }
     }
 
     return { coverUrl: '', source: 'none' };
@@ -60,21 +95,14 @@ export async function searchBookCoverByISBN(isbn: string): Promise<BookCoverResu
     // Open Library supporte directement les ISBN dans l'URL des couvertures
     const coverUrl = `${OPEN_LIBRARY_COVERS_API}/isbn/${isbn}-M.jpg`;
     
-    // Vérifier que l'image existe (Open Library retourne une image 1x1 si pas trouvé)
-    const response = await fetch(coverUrl, {
-      method: 'HEAD',
-      signal: AbortSignal.timeout(5000),
-    });
-
-    if (response.ok) {
-      // Vérifier la taille (si trop petite = image placeholder)
-      const contentLength = response.headers.get('content-length');
-      if (contentLength && parseInt(contentLength) > 1000) {
-        return {
-          coverUrl,
-          source: 'open-library',
-        };
-      }
+    // Valider que l'image existe et n'est pas un placeholder
+    const isValid = await validateOpenLibraryCover(coverUrl);
+    
+    if (isValid) {
+      return {
+        coverUrl,
+        source: 'open-library',
+      };
     }
 
     return { coverUrl: '', source: 'none' };
