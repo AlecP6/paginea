@@ -2,18 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force le mode sombre pour tous les éléments */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 6, 95, 70;
-  --background-end-rgb: 2, 44, 34;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 4, 47, 46;
-    --background-end-rgb: 2, 24, 20;
-  }
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 4, 47, 46;
+  --background-end-rgb: 2, 24, 20;
+  color-scheme: dark;
 }
 
 body {
