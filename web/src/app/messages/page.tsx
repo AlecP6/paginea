@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import Navbar from '@/components/Navbar';
 import { messageApi, friendshipApi } from '@/lib/api';
-import { Send, MessageCircle, User as UserIcon, Search, Plus, X, Smile, Trash2, Edit3 } from 'lucide-react';
+import { Send, MessageCircle, User as UserIcon, Search, Plus, X, Smile, Trash2, Edit3, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 
