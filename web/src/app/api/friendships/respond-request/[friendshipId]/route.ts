@@ -40,10 +40,30 @@ export async function PUT(
       );
     }
 
+    // Si la demande est refusée, on la supprime au lieu de la marquer REJECTED
+    // Cela permet de renvoyer une demande plus tard
+    if (action === 'reject') {
+      await prisma.friendship.delete({
+        where: { id: friendshipId },
+      });
+      
+      console.log('❌ Demande refusée et supprimée:', {
+        friendshipId,
+        initiatorId: friendship.initiatorId,
+        receiverId: friendship.receiverId,
+      });
+      
+      return NextResponse.json({ 
+        message: 'Demande refusée',
+        deleted: true 
+      });
+    }
+
+    // Si acceptée, mettre à jour le statut
     const updatedFriendship = await prisma.friendship.update({
       where: { id: friendshipId },
       data: {
-        status: action === 'accept' ? 'ACCEPTED' : 'REJECTED',
+        status: 'ACCEPTED',
       },
       include: {
         initiator: {
@@ -65,6 +85,12 @@ export async function PUT(
           },
         },
       },
+    });
+
+    console.log('✅ Demande acceptée:', {
+      friendshipId,
+      initiator: updatedFriendship.initiator.username,
+      receiver: updatedFriendship.receiver.username,
     });
 
     return NextResponse.json(updatedFriendship);

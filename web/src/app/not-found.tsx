@@ -1,3 +1,5 @@
+// ⚠️ PAS D'ANNONCES sur cette page (conformité Google Ads)
+// Page d'erreur 404 = "contenu à faible valeur" interdit par Google
 export default function NotFound() {
   return (
     <div

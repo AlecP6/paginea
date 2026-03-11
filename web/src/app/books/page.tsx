@@ -154,11 +154,32 @@ export default function BooksPage() {
       try {
         const response = await fetch(book.coverImage);
         const blob = await response.blob();
-        const file = new File([blob], `cover-${book.title}.jpg`, { type: 'image/jpeg' });
+        
+        // Détecter le type MIME réel de l'image
+        const contentType = blob.type || 'image/jpeg';
+        
+        // Déterminer l'extension basée sur le type MIME
+        let extension = 'jpg';
+        if (contentType.includes('png')) extension = 'png';
+        else if (contentType.includes('gif')) extension = 'gif';
+        else if (contentType.includes('webp')) extension = 'webp';
+        
+        // Créer le fichier avec le bon type MIME
+        const fileName = `cover-${book.title.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 50)}.${extension}`;
+        const file = new File([blob], fileName, { type: contentType });
+        
+        console.log('📚 Couverture sélectionnée:', {
+          titre: book.title,
+          url: book.coverImage,
+          type: contentType,
+          taille: `${(blob.size / 1024).toFixed(2)} KB`,
+        });
+        
         setSelectedCoverFile(file);
         setCoverPreview(book.coverImage);
       } catch (error) {
         console.error('Erreur téléchargement couverture:', error);
+        toast.error('Impossible de télécharger la couverture du livre');
       }
     }
     

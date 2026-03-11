@@ -31,6 +31,7 @@ export async function POST(
       );
     }
 
+    // Vérifier s'il existe une amitié active (PENDING ou ACCEPTED)
     const existingFriendship = await prisma.friendship.findFirst({
       where: {
         OR: [
@@ -41,10 +42,24 @@ export async function POST(
     });
 
     if (existingFriendship) {
-      return NextResponse.json(
-        { error: 'Une demande d\'amitié existe déjà' },
-        { status: 400 }
-      );
+      // Si l'amitié est REJECTED, on peut la supprimer et recréer une nouvelle demande
+      if (existingFriendship.status === 'REJECTED') {
+        await prisma.friendship.delete({
+          where: { id: existingFriendship.id },
+        });
+        console.log('🗑️ Ancienne demande REJECTED supprimée, création d\'une nouvelle');
+      } else {
+        // PENDING ou ACCEPTED : bloquer
+        const statusMessage = 
+          existingFriendship.status === 'PENDING' 
+            ? 'Une demande d\'amitié est déjà en attente' 
+            : 'Vous êtes déjà amis';
+        
+        return NextResponse.json(
+          { error: statusMessage },
+          { status: 400 }
+        );
+      }
     }
 
     const friendship = await prisma.friendship.create({
